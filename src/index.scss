@@ -1,0 +1,32 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.tiendas-form {
+    display: block;
+    margin: 10px auto;
+    width: 320px;
+}
+
+.tiendas-form-inputs {
+    display: flex;
+    flex-direction: column;
+}
+
+.tiendas-form-inputs > div {
+    margin: 3px;
+}
+
+.tiendas-form-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+  
+.tiendas-form-actions button {
+    margin: 3px;
+}
