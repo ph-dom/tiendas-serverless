@@ -3,11 +3,11 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import firebaseApp from '../../config/firebase';
 import { loginUser, logoutUser } from '../../redux/user/actions';
+import { openSnackbar } from '../../redux/snackbar/actions';
 import AppBarComponent from './appbar';
 import SnackbarComponent from './snackbar';
 import LoadingComponent from './loading';
-
-export const StateContext = React.createContext();
+import GoogleMapComponent from './googlemap';
 
 class BaseComponent extends React.Component {
     constructor(props){
@@ -40,9 +40,19 @@ class BaseComponent extends React.Component {
         if(user) {
             this.props.loginUser(user.uid);
             this.props.history.push('/');
+            this.props.openSnackbar({
+                open: true,
+                color: 'success',
+                message: `Has ingresado como: ${user.email}.`
+            });
         } else {
             this.props.logoutUser();
             this.props.history.push('/login');
+            this.props.openSnackbar({
+                open: true,
+                color: 'success',
+                message: 'Sesión cerrada.'
+            });
         }
         !this.state.appLoaded && this.setState({
             appLoaded: true
@@ -50,18 +60,16 @@ class BaseComponent extends React.Component {
     };
     
     render() {
-        const value = {
-            snackbar: this.state.snackbar,
-            handleToggleStackbar: this.handleToggleStackbar
-        }
         const auth = this.props.auth;
+        let display = this.props.location.pathname === '/' ? 'block' : 'none';
         if(this.state.appLoaded) {
             return (
-                <StateContext.Provider value={value}>
+                <React.Fragment>
                     {auth && <AppBarComponent /> }
+                    <GoogleMapComponent display={display} />
                     {this.props.children}
                     <SnackbarComponent />
-                </StateContext.Provider>
+                </React.Fragment>
             );
         } else {
             return (
@@ -77,7 +85,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     loginUser: (uid) => dispatch(loginUser(uid)),
-    logoutUser: () => dispatch(logoutUser())
+    logoutUser: () => dispatch(logoutUser()),
+    openSnackbar: (state) => dispatch(openSnackbar(state))
 });
 
 const BaseComponentWithRouter = withRouter(BaseComponent);

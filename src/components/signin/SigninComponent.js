@@ -4,11 +4,9 @@ import Typography from '@material-ui/core/Typography';
 import InputTextOutlined from '../shared/inputs/textoutlined';
 import InputButtonContained from  '../shared/inputs/buttoncontained';
 import ButtonOutlined from '../shared/buttons/buttonoutlined';
-import { StateContext } from '../shared/base'
 import { startSigninUserEmail } from '../../redux/user/actions';
 
 class SigninComponent extends React.Component {
-	static contextType =  StateContext;
 	state = {
 		email: '',
 		password: '',

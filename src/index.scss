@@ -3,6 +3,21 @@ body {
     padding: 0;
 }
 
+.googlemap-container {
+    position: absolute;
+    z-index: 1;
+    top: 56px;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
+@media (min-width: 600px) {
+    .googlemap-container {
+        top: 64px;
+    }
+}
+
 .text-center {
     text-align: center;
 }

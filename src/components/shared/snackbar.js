@@ -1,26 +1,40 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
-import { StateContext } from './base'
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import { closeSnackbar } from '../../redux/snackbar/actions';
 
-const SnackbarComponent = () => {
-    const value = React.useContext(StateContext);
-    
+const SnackbarComponent = ({ snackbar, closeSnackbar }) => {
     const handleClose = (event, reason) => {
-        value.handleToggleStackbar({
-            open: false,
-            severity: null,
-            message: null
-        });
+        if (reason === 'clickaway') {
+            return;
+        }
+        closeSnackbar();
     };
-    
+
     return (
-        <Snackbar open={value.snackbar.open} autoHideDuration={6000} onClose={handleClose}>
-            <MuiAlert elevation={6} variant="filled" severity={value.snackbar.severity} onClose={handleClose}>
-                {value.snackbar.message}
-            </MuiAlert>
-        </Snackbar>
+        <Snackbar
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            open={snackbar.open}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            message={snackbar.message}
+            action={
+                <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+                    <CloseIcon fontSize="small" />
+                </IconButton>
+            }
+        />
     );
 }
 
-export default SnackbarComponent;
+const mapStateToProps = (state) => ({
+    snackbar: state.snackbar
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    closeSnackbar: () => dispatch(closeSnackbar())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SnackbarComponent);
