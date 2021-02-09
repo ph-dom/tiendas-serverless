@@ -1,0 +1,8 @@
+<svg id="currentlocation" version="1.1" width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <circle cx="50%" cy="50%" r="10%" fill="#000000" stroke="none" opacity="0.8"></circle>
+    <circle cx="50%" cy="50%" r="25%" fill="none" stroke="#000000" stroke-width="5%">
+        <animate attributeType="SVG" attributeName="r" begin="0s" dur="1.5s" repeatCount="indefinite" from="10%" to="50%"/>
+        <animate attributeType="CSS" attributeName="stroke-width" begin="0s"  dur="1.5s" repeatCount="indefinite" from="3%" to="0%" />
+        <animate attributeType="CSS" attributeName="opacity" begin="0s"  dur="1.5s" repeatCount="indefinite" from="1" to="0"/>
+    </circle>
+</svg>

@@ -3,7 +3,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 
 class GoogleMapComponent extends React.Component {
     mapDiv = React.createRef();
-    map  = null;
+    map = null;
 
     state = {
         getCurrentPositionStatus: false,
@@ -20,18 +20,27 @@ class GoogleMapComponent extends React.Component {
         let lng = position.coords.longitude;
         const mapDiv = this.mapDiv.current;
         const loader = new Loader({
-            apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '',
+            apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
             version: "weekly"
         });
         loader.load().then(() => {
             const google = window.google;
             this.map = new google.maps.Map(mapDiv, {
+                mapId: process.env.REACT_APP_GOOGLE_MAPS_ID_STYLE,
                 center: {
                     lat,
                     lng
                 },
-                zoom: 18
+                zoom: 18,
+                disableDefaultUI: true
             });
+            new google.maps.Marker({
+                position: new google.maps.LatLng(lat, lng),
+                icon: '/currentlocation.svg',
+                map: this.map,
+                title: "Estas aquí"
+            });
+            /*marker.addListener('click", () => {});*/
             this.setState({
                 getCurrentPositionStatus: true,
                 googleMapInstanceCreated: true,
@@ -66,9 +75,9 @@ class GoogleMapComponent extends React.Component {
             this.errorGetCurrentPositionCallback();
         }
     }
-    
+
     render() {
-        const { display } = this.props;
+        const { display } = this.props;
         return (
             <div className="googlemap-container" style={{ display }} ref={this.mapDiv} />
         );

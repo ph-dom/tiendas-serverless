@@ -8,6 +8,7 @@ import AppBarComponent from './appbar';
 import SnackbarComponent from './snackbar';
 import LoadingComponent from './loading';
 import GoogleMapComponent from './googlemap';
+import ModalComponent from './modal';
 
 class BaseComponent extends React.Component {
     constructor(props){
@@ -69,6 +70,7 @@ class BaseComponent extends React.Component {
                     <GoogleMapComponent display={display} />
                     {this.props.children}
                     <SnackbarComponent />
+                    <ModalComponent />
                 </React.Fragment>
             );
         } else {
