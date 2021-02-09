@@ -3,11 +3,19 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import firebaseApp from '../../config/firebase';
 import { loginUser, logoutUser } from '../../redux/user/actions';
+<<<<<<< HEAD
 import { openSnackbar } from '../../redux/snackbar/actions';
 import AppBarComponent from './appbar';
 import SnackbarComponent from './snackbar';
 import LoadingComponent from './loading';
 import GoogleMapComponent from './googlemap';
+=======
+import AppBarComponent from './appbar';
+import SnackbarComponent from './snackbar';
+import LoadingComponent from './loading';
+
+export const StateContext = React.createContext();
+>>>>>>> fc5769835b4e00b02b06190e0ef50c206f0a3228
 
 class BaseComponent extends React.Component {
     constructor(props){
