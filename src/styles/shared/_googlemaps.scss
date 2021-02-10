@@ -1,0 +1,17 @@
+.googlemap-container {
+    height: 250px;
+    width: 100%;
+    border-color: #ddd;
+    border-radius: 4px;
+}
+
+.googlemap {
+    width: 100%;
+    height: 100%;
+}
+
+@media (min-width: 600px) {
+    .googlemap-container {
+        top: 64px;
+    }
+}

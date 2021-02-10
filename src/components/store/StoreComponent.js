@@ -1,35 +1,72 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { isEmpty, pick } from 'lodash';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import InputTextOutlined from '../shared/inputs/textoutlined';
 import InputTextareaOutlined from '../shared/inputs/textareaoutlined'
 import InputButtonContained from '../shared/inputs/buttoncontained';
+import ButtonOutlined from '../shared/buttons/buttonoutlined';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { openModal } from '../../redux/modal/action';
 import { openSnackbar } from '../../redux/snackbar/actions';
-import { startCreateUserStore } from '../../redux/store/actions';
+import { startCreateUserStore, startUpdateUserStore } from '../../redux/store/actions';
 
 class StoreComponent extends React.Component {
-    state = {
-        name: '',
-        description: '',
-        location: null,
-        address: ''
+    constructor(props) {
+        super(props);
+        const { store } = this.props;
+        this.state = isEmpty(store) ? {
+            name: '',
+            description: '',
+            location: null,
+            address: '',
+            loadingLocation: false,
+            loadingSaveOrUpdate: false
+        } : {
+            name: store.name,
+            description: store.description,
+            location: {
+                lat: store.lat,
+                lng: store.lng
+            },
+            address: store.address,
+            loadingLocation: false,
+            loadingSaveOrUpdate: false
+        };
     }
 
     handleSubmitForm = (event) => {
         event.preventDefault();
-        console.log('me llamaron :O');
-        this.props.startCreateUserStore(
-            this.state,
-            () => {
-                this.props.openSnackbar('Tienda creada exitosamente.');
-            },
-            () => {
-                this.props.openModal('Error al crear tienda.');
-            }
-        );
+        this.setState({
+            loadingSaveOrUpdate: true
+        });
+        const { store } = this.props;
+        if(isEmpty(store)) {
+            this.props.startCreateUserStore(
+                pick(this.state, ['name', 'description', 'location', 'address']),
+                this.openSuccessSnackbar,
+                this.openErrorModal
+            );
+        } else {
+            this.props.startUpdateUserStore(
+                store.id,
+                pick(this.state, ['description', 'location', 'address']),
+                this.openSuccessSnackbar,
+                this.openErrorModal
+            );
+        }
+    }
+
+    openErrorModal = () => {
+        this.props.openModal('Error al guardar datos.');
+        this.setState({ loadingSaveOrUpdate: false });
+    }
+
+    openSuccessSnackbar = () => {
+        this.props.openSnackbar('Datos guardados exitosamente.');
+        this.setState({ loadingSaveOrUpdate: false });
     }
 
     onInputTextChange = (event) => {
@@ -47,15 +84,20 @@ class StoreComponent extends React.Component {
             location: {
                 lat,
                 lng
-            }
+            },
+            loadingLocation: false
         });
+        this.props.openSnackbar('Ubicación de tienda actualizada.');
     }
 
     errorGetCurrentPositionCallback = () => {
         this.props.openModal('No pudimos acceder a tu ubicación.');
     }
-    
-    componentDidMount() {
+
+    getLocation = () => {
+        this.setState({
+            loadingLocation: true
+        });
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 this.succesGetCurrentPositionCallback,
@@ -65,24 +107,30 @@ class StoreComponent extends React.Component {
             this.errorGetCurrentPositionCallback();
         }
     }
+    
+    componentDidMount() {
+        const { store } = this.props;
+        isEmpty(store) && this.getLocation();
+    }
 
     render() {
-        const { name, description, address } = this.state;
+        const { name, description, address, loadingLocation, loadingSaveOrUpdate } = this.state;
+        const { store } = this.props;
         return (
             <Grid container className="container">
                 <Grid item xs={12} sm={5}>
                     <Paper className="paper" variant="outlined">
-                        <Typography variant="h5">Mi Tienda</Typography>
+                        <Typography variant="h5">{isEmpty(store) ? 'Crear Tienda' : name }</Typography>
                         <form id="store-form" onSubmit={this.handleSubmitForm} autoComplete="off" className="tiendas-form tiendas-form__full-width">
                             <div className="tiendas-form-inputs">
-                                <InputTextOutlined
+                                {isEmpty(store) && <InputTextOutlined
                                     idInput="StoreInput-name"
                                     nameInput="name"
                                     typeInput="text"
                                     textLabel="Nombre"
                                     value={name}
                                     onChange={this.onInputTextChange}
-                                />
+                                />}
                                 <InputTextareaOutlined
                                     idInput="StoreInput-description"
                                     nameInput="description"
@@ -100,10 +148,19 @@ class StoreComponent extends React.Component {
                                 />
                             </div>
                             <div className="tiendas-form-actions">
-                                <InputButtonContained
-                                    idForm="store-form"
-                                    text="Guardar Tienda"
-                                />
+                                {loadingLocation ? 
+                                    <CircularProgress color="secondary" /> : 
+                                    <ButtonOutlined
+                                        onClick={this.getLocation}
+                                        text="Actualizar ubicación"
+                                    />}
+                                {loadingSaveOrUpdate ? 
+                                    <CircularProgress color="primary" /> :
+                                    <InputButtonContained
+                                        idForm="store-form"
+                                        text="Guardar"
+                                    />
+                                }
                             </div>
                         </form>
                     </Paper>
@@ -112,11 +169,17 @@ class StoreComponent extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state) => ({
+    store: state.store
+});
+
 const mapDispatchToProps = (dispatch) => ({
     openModal: (message) => dispatch(openModal(message)),
     openSnackbar: (message) => dispatch(openSnackbar(message)),
-    startCreateUserStore: (store, successCallback, errorCallback) => dispatch(startCreateUserStore(store, successCallback, errorCallback))
+    startCreateUserStore: (store, successCallback, errorCallback) => dispatch(startCreateUserStore(store, successCallback, errorCallback)),
+    startUpdateUserStore: (id, updates, successCallback, errorCallback) => dispatch(startUpdateUserStore(id, updates, successCallback, errorCallback))
 });
 
-export default connect(undefined, mapDispatchToProps)(StoreComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(StoreComponent);
 

@@ -6,7 +6,9 @@ const storeReducer = (state = storeReducerDefaultState, action) => {
             return {
                 ...state,
                 ...action.data
-            }
+            };
+        case 'LOGOUT_USER':
+            return storeReducerDefaultState;
         default:
             return state;
     }

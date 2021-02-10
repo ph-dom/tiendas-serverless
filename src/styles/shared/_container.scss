@@ -1,0 +1,10 @@
+.container {
+    margin: 8px 16px;
+    width: auto !important;
+}
+
+@media (min-width: 600px) {
+    .container {
+        margin: 10px 24px;
+    }
+}

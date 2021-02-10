@@ -11,6 +11,7 @@ const InputTextareaOutlined = ({ textLabel, value, onChange, nameInput, idInput 
         value={value}
         onChange={onChange}
         rows={3}
+        size="small"
     />
 );
 export default InputTextareaOutlined;

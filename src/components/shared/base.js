@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import firebaseApp from '../../config/firebase';
 import { loginUser, logoutUser } from '../../redux/user/actions';
 import { openSnackbar } from '../../redux/snackbar/actions';
+import { startGetUserStore } from '../../redux/store/actions';
+import { openModal } from '../../redux/modal/action';
 import AppBarComponent from './appbar';
 import SnackbarComponent from './snackbar';
 import LoadingComponent from './loading';
@@ -13,11 +15,6 @@ class BaseComponent extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            snackbar: {
-                open: false,
-                severity: null,
-                message: null
-            },
             appLoaded: false
         }
     }
@@ -26,19 +23,12 @@ class BaseComponent extends React.Component {
         firebaseApp.auth().onAuthStateChanged(this.handleAuthStateChange);
     }
 
-    handleToggleStackbar = ({ open, severity, message }) => {
-        this.setState({
-            snackbar: {
-                open,
-                severity,
-                message
-            }
-        });
-    }
-
     handleAuthStateChange = (user) => {
         if(user) {
             this.props.loginUser(user.uid);
+            this.props.startGetUserStore(() => {
+                this.props.openModal('Error al acceder a los datos de tienda.');
+            });
             this.props.history.push('/');
             this.props.openSnackbar(`Has ingresado como: ${user.email}.`);
         } else {
@@ -46,9 +36,11 @@ class BaseComponent extends React.Component {
             this.props.history.push('/login');
             this.props.openSnackbar('Sesión cerrada.');
         }
-        !this.state.appLoaded && this.setState({
-            appLoaded: true
-        });
+        if(!this.state.appLoaded) {
+            this.setState({
+                appLoaded: true
+            });
+        }
     };
     
     render() {
@@ -77,7 +69,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     loginUser: (uid) => dispatch(loginUser(uid)),
     logoutUser: () => dispatch(logoutUser()),
-    openSnackbar: (message) => dispatch(openSnackbar(message))
+    openSnackbar: (message) => dispatch(openSnackbar(message)),
+    openModal: (message) => dispatch(openModal(message)),
+    startGetUserStore: (errorCallback) => dispatch(startGetUserStore(errorCallback))
 });
 
 const BaseComponentWithRouter = withRouter(BaseComponent);

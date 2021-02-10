@@ -1,0 +1,38 @@
+.tiendas-form {
+    display: block;
+    margin: 10px auto;
+    width: 320px;
+}
+
+.tiendas-form__full-width {
+    width: 100%;
+    margin: 0;
+}
+
+.tiendas-form-inputs {
+    display: flex;
+    flex-direction: column;
+}
+
+.tiendas-form-inputs > div {
+    margin: 4px 0;
+}
+
+.tiendas-form-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+  
+.tiendas-form-actions > button {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: 4px;
+    margin-right: 0px;
+}
+
+.tiendas-form-actions > div {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: 4px;
+    margin-right: 0px;
+}
