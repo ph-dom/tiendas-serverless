@@ -1,6 +1,6 @@
 let userReducerDefaultState = {
     uid: null
-}
+};
 
 const userReducer = (state = userReducerDefaultState, action) => {
     switch (action.type) {

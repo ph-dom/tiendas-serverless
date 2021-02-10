@@ -38,36 +38,34 @@ class LoginComponent extends React.Component {
 				<Typography variant="h2" className="text-center">
 					Tiendas
 				</Typography>
-				<form id="login-form" onSubmit={this.handleSubmitForm} autoComplete="off">
-					<div className="tiendas-form">
-						<div className="tiendas-form-inputs">
-							<InputTextOutlined
-								idInput="LoginInput-email"
-								nameInput="email"
-								typeInput="email"
-								textLabel="Email"
-								value={email}
-								onChange={this.onInputTextChange}
-							/>
-							<InputTextOutlined
-								idInput="LoginInput-password"
-								nameInput="password"
-								typeInput="password"
-								textLabel="Contraseña"
-								value={password}
-								onChange={this.onInputTextChange}
-							/>
-						</div>
-						<div className="tiendas-form-actions">
-                            <InputButtonOutlined
-                                onClick={this.handleClickSignin}
-                                text="Registrarse"
-                            />
-							<InputButtonContained
-								idForm="login-form"
-								text="Iniciar Sesión"
-							/>
-						</div>
+				<form id="login-form" onSubmit={this.handleSubmitForm} autoComplete="off" className="tiendas-form">
+					<div className="tiendas-form-inputs">
+						<InputTextOutlined
+							idInput="LoginInput-email"
+							nameInput="email"
+							typeInput="email"
+							textLabel="Email"
+							value={email}
+							onChange={this.onInputTextChange}
+						/>
+						<InputTextOutlined
+							idInput="LoginInput-password"
+							nameInput="password"
+							typeInput="password"
+							textLabel="Contraseña"
+							value={password}
+							onChange={this.onInputTextChange}
+						/>
+					</div>
+					<div className="tiendas-form-actions">
+						<InputButtonOutlined
+							onClick={this.handleClickSignin}
+							text="Registrarse"
+						/>
+						<InputButtonContained
+							idForm="login-form"
+							text="Iniciar Sesión"
+						/>
 					</div>
 				</form>
 			</React.Fragment>

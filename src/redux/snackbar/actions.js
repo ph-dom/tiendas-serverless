@@ -1,9 +1,8 @@
-export const openSnackbar = ({ message, color }) => ({
+export const openSnackbar = (message) => ({
     type: 'OPEN_SNACKBAR',
     data: {
         open: true,
-        message,
-        color
+        message
     }
 });
 

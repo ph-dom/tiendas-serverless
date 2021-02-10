@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Divider from '@material-ui/core/Divider';
 import { startLogoutUser } from '../../redux/user/actions';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,7 +38,7 @@ const AppBarComponent = (props) => {
     };
 
     const handleLogout = () => {
-        setAnchorEl(null);
+        handleClose();
         props.startLogoutUser();
     }
 
@@ -73,7 +74,8 @@ const AppBarComponent = (props) => {
                             open={open}
                             onClose={handleClose}
                         >
-                            <MenuItem onClick={handleClose}>Profile</MenuItem>
+                            <MenuItem onClick={handleClose} component={Link} to="/mitienda" >Mi Tienda</MenuItem>
+                            <Divider />
                             <MenuItem onClick={handleLogout}>Cerrar Sesión</MenuItem>
                         </Menu>
                     </div>

@@ -7,7 +7,6 @@ import { openSnackbar } from '../../redux/snackbar/actions';
 import AppBarComponent from './appbar';
 import SnackbarComponent from './snackbar';
 import LoadingComponent from './loading';
-import GoogleMapComponent from './googlemap';
 import ModalComponent from './modal';
 
 class BaseComponent extends React.Component {
@@ -41,19 +40,11 @@ class BaseComponent extends React.Component {
         if(user) {
             this.props.loginUser(user.uid);
             this.props.history.push('/');
-            this.props.openSnackbar({
-                open: true,
-                color: 'success',
-                message: `Has ingresado como: ${user.email}.`
-            });
+            this.props.openSnackbar(`Has ingresado como: ${user.email}.`);
         } else {
             this.props.logoutUser();
             this.props.history.push('/login');
-            this.props.openSnackbar({
-                open: true,
-                color: 'success',
-                message: 'Sesión cerrada.'
-            });
+            this.props.openSnackbar('Sesión cerrada.');
         }
         !this.state.appLoaded && this.setState({
             appLoaded: true
@@ -62,12 +53,10 @@ class BaseComponent extends React.Component {
     
     render() {
         const auth = this.props.auth;
-        let display = this.props.location.pathname === '/' ? 'block' : 'none';
         if(this.state.appLoaded) {
             return (
                 <React.Fragment>
-                    {auth && <AppBarComponent /> }
-                    <GoogleMapComponent display={display} />
+                    {auth && <AppBarComponent history={this.props.history} /> }
                     {this.props.children}
                     <SnackbarComponent />
                     <ModalComponent />
@@ -88,7 +77,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     loginUser: (uid) => dispatch(loginUser(uid)),
     logoutUser: () => dispatch(logoutUser()),
-    openSnackbar: (state) => dispatch(openSnackbar(state))
+    openSnackbar: (message) => dispatch(openSnackbar(message))
 });
 
 const BaseComponentWithRouter = withRouter(BaseComponent);
