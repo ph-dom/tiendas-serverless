@@ -11,9 +11,11 @@ export const startSigninUserEmail = (email, password) => {
     };
 };
 
-export const startLoginUser = (email, password) => {
+export const startLoginUser = (email, password, errorCallback) => {
     return () => {
-        return firebaseApp.auth().signInWithEmailAndPassword(email, password);
+        return firebaseApp.auth().signInWithEmailAndPassword(email, password).catch(error => {
+            errorCallback()
+        });
     };
 };
 

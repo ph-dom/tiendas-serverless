@@ -1,26 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography';
 import { closeModal } from '../../redux/modal/action';
 
-const useStyles = makeStyles((theme) => ({
-    paper: {
-        position: 'absolute',
-        width: 400,
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
-}));
-
 const ModalComponent = ({ modal, closeModal }) => {
-    const classes = useStyles();
-
     const handleClose = () => {
         closeModal();
     };
@@ -32,12 +21,20 @@ const ModalComponent = ({ modal, closeModal }) => {
             aria-labelledby="modal-title"
             aria-describedby="modal-description"
         >
-            <div className={classes.paper}>
-                <h2 id="modal-title">Modal</h2>
-                <p id="modal-description">
-                    {modal.message}
-                </p>
-            </div>
+            <Card raised={true} className="modal">
+                <CardContent>
+                    <Typography id="modal-title" variant="subtitle1" gutterBottom>
+                        Ha ocurrido un error
+                    </Typography>
+                    <Divider variant="fullWidth"/>
+                    <Typography id="modal-description" variant="body1">
+                        {modal.message}
+                    </Typography>
+                </CardContent>
+                <CardActions className="modal-action">
+                    <Button color="primary" size="small" variant="contained" onClick={handleClose}>Aceptar</Button>
+                </CardActions>
+            </Card>
         </Modal>
     );
 };

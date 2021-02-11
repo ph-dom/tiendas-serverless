@@ -5,6 +5,7 @@ import InputTextOutlined from '../shared/inputs/textoutlined';
 import InputButtonContained from  '../shared/inputs/buttoncontained';
 import InputButtonOutlined from '../shared/buttons/buttonoutlined';
 import { startLoginUser } from '../../redux/user/actions';
+import { openModal } from '../../redux/modal/action';
 
 class LoginComponent extends React.Component {
     state = {
@@ -23,7 +24,16 @@ class LoginComponent extends React.Component {
 	handleSubmitForm = (event) => {
 		event.preventDefault();
 		const { email, password } = this.state;
-		this.props.startLoginUser(email, password);
+		try {
+			this.props.startLoginUser(email, password, () => {
+				this.props.openModal('Correo o contraseña incorrectas.');
+				this.setState({
+        			password: ''
+				});
+			});
+		} catch(error) {
+			console.log(error)
+		}
     }
     
     handleClickSignin = (event) => {
@@ -74,7 +84,8 @@ class LoginComponent extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-	startLoginUser: (email, password) => dispatch(startLoginUser(email, password))
+	startLoginUser: (email, password, errorCallback) => dispatch(startLoginUser(email, password, errorCallback)),
+	openModal: (message) => dispatch(openModal(message))
 });
 
 export default connect(undefined, mapDispatchToProps)(LoginComponent);
