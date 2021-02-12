@@ -1,4 +1,5 @@
 import firebaseApp from '../../config/firebase';
+import { getStoreProducts, startGetStoreProducts } from '../products/actions';
 const geofire = require('geofire-common');
 
 const setUserStore = (store) => ({
@@ -24,9 +25,7 @@ export const startCreateUserStore = ({ name, address, description, location }, s
                 email: user.email
             }
         })
-        .then(documentRef => {
-            return documentRef.get();
-        })
+        .then(documentRef => documentRef.get())
         .then(document => {
             const userStore = {
                 id: document.id,
@@ -56,9 +55,12 @@ export const startGetUserStore = (errorCallback) => {
                     ...querySnapshot.docs[0].data()
                 }
                 dispatch(setUserStore(userStore));
+                return startGetStoreProducts(userStore.id);
             } else if(querySnapshot.size === 0) {
                 dispatch(setUserStore({}));
             }
+        }).then(products => {
+            dispatch(getStoreProducts(products));
         }).catch(error => {
             console.log(error);
             errorCallback();

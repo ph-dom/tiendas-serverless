@@ -1,0 +1,9 @@
+.chips-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.chips-container > div {
+    margin: 2px;
+}

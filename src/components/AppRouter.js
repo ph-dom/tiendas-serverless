@@ -6,13 +6,15 @@ import HomeComponent from './home/HomeComponent';
 import SigninComponent from './signin/SigninComponent';
 import LoginComponent from './login/LoginComponent';
 import StoreComponent from './store/StoreComponent';
+import ProductsComponent from './product/ProductsComponent';
 
 const AppRouter = ({ isAuthenticated }) => (
     <BrowserRouter>
         <BaseComponent>
             <Switch>
                 <PrivateRoute isAuthenticated={isAuthenticated} path="/" exact component={HomeComponent} />
-                <PrivateRoute isAuthenticated={isAuthenticated} path="/mitienda" component={StoreComponent} />
+                <PrivateRoute isAuthenticated={isAuthenticated} path="/mitienda" exact component={StoreComponent} />
+                <PrivateRoute isAuthenticated={isAuthenticated} path={["/mitienda/producto","/mitienda/producto/:idProduct"]} exact component={ProductsComponent} />
                 <PublicRoute isAuthenticated={isAuthenticated} path="/signin" component={SigninComponent} />
                 <PublicRoute isAuthenticated={isAuthenticated} path="/login" exact component={LoginComponent} />
                 <Route path="*" component={() => <h1>Not Found</h1>} />

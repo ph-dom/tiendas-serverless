@@ -25,4 +25,6 @@ const firebaseConfig = process.env.NODE_ENV === 'production' ? {
 
 const app = firebase.initializeApp(firebaseConfig);
 
+export const timestamp = firebase.firestore.Timestamp;
+
 export default app;
