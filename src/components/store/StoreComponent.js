@@ -15,6 +15,7 @@ import ProductListItem from './ProductListItem';
 import { openModal } from '../../redux/modal/action';
 import { openSnackbar } from '../../redux/snackbar/actions';
 import { startCreateUserStore, startUpdateUserStore } from '../../redux/store/actions';
+import { startDeleteStoreProduct } from '../../redux/products/actions';
 import './StoreStyles.scss';
 
 class StoreComponent extends React.Component {
@@ -96,6 +97,7 @@ class StoreComponent extends React.Component {
 
     errorGetCurrentPositionCallback = () => {
         this.props.openModal('No pudimos acceder a tu ubicación.');
+        this.setState({ loadingSaveOrUpdate: false });
     }
 
     getLocation = () => {
@@ -110,6 +112,21 @@ class StoreComponent extends React.Component {
         } else {
             this.errorGetCurrentPositionCallback();
         }
+    }
+
+    onDeleteProduct = (idProduct) => {
+        this.props.openModal('¿Seguro que deseas eliminar este producto?', () => {
+            console.log('me ejecute');
+            this.props.startDeleteStoreProduct(
+                idProduct,
+                () => this.props.openSnackbar('Ubicación de tienda actualizada.'),
+                () => this.props.openModal('Error al eliminar producto, intentar nuevamente en breve.')
+            );
+        });
+    }
+
+    onEditProduct = (idProduct) => {
+        this.props.history.push(`/mitienda/producto/${idProduct}`);
     }
     
     componentDidMount() {
@@ -183,7 +200,8 @@ class StoreComponent extends React.Component {
                             productName={product.name}
                             productTags={product.tags}
                             storeName={store.name}
-                            onEdit={() => this.props.history.push(`/mitienda/producto/${product.id}`)}
+                            onEdit={() => this.onEditProduct(product.id)}
+                            onDelete={() => this.onDeleteProduct(product.id)}
                         />
                     ))}
                 </Grid>
@@ -202,10 +220,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    openModal: (message) => dispatch(openModal(message)),
+    openModal: (message, onConfirm) => dispatch(openModal(message, onConfirm)),
     openSnackbar: (message) => dispatch(openSnackbar(message)),
     startCreateUserStore: (store, successCallback, errorCallback) => dispatch(startCreateUserStore(store, successCallback, errorCallback)),
-    startUpdateUserStore: (id, updates, successCallback, errorCallback) => dispatch(startUpdateUserStore(id, updates, successCallback, errorCallback))
+    startUpdateUserStore: (id, updates, successCallback, errorCallback) => dispatch(startUpdateUserStore(id, updates, successCallback, errorCallback)),
+    startDeleteStoreProduct: (idProduct, successCallback, errorCallback) => dispatch(startDeleteStoreProduct(idProduct, successCallback, errorCallback))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StoreComponent);

@@ -1,8 +1,9 @@
-export const openModal = (message) => ({
+export const openModal = (message, onConfirm = null) => ({
     type: 'OPEN_MODAL',
     data: {
         open: true,
-        message
+        message,
+        onConfirm
     }
 });
 
@@ -10,6 +11,7 @@ export const closeModal = () => ({
     type: 'CLOSE_MODAL',
     data: {
         open: false,
-        message: null
+        message: null,
+        onConfirm: null
     }
 });

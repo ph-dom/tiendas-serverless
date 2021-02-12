@@ -61,8 +61,9 @@ const deleteStoreProduct = (idProduct) => ({
     data: idProduct
 });
 
-export const startDeleteStoreProduct = (idStore, idProduct, successCallback, errorCallback) => {
-    return (dispatch) => {
+export const startDeleteStoreProduct = (idProduct, successCallback, errorCallback) => {
+    return (dispatch, getState) => {
+        const idStore = getState().store.id;
         return firebaseApp.firestore()
         .collection(`/stores/${idStore}/products`)
         .doc(idProduct)

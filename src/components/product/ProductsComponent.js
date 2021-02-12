@@ -7,15 +7,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import CloseIcon from '@material-ui/icons/Close';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
-import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn';
 import InputTextOutlined from '../shared/inputs/textoutlined';
 import InputTextareaOutlined from '../shared/inputs/textareaoutlined';
 import InputButtonContained from '../shared/inputs/buttoncontained';
+import ChipFormControl from './chipformcontrol';
 import { startCreateStoreProduct, startUpdateStoreProduct } from '../../redux/products/actions';
 import { openSnackbar } from '../../redux/snackbar/actions';
 import { openModal } from '../../redux/modal/action';
@@ -137,28 +132,11 @@ class ProductsComponent extends React.Component {
                                     value={description}
                                     onChange={this.onInputTextChange}
                                 />
-                                <FormControl variant="outlined" size="small">
-                                    <InputLabel htmlFor="ProductInput-tag">Tags</InputLabel>
-                                    <OutlinedInput
-                                        id="ProductInput-tag"
-                                        type="text"
-                                        value={tag}
-                                        onChange={this.onInputTextChange}
-                                        name="tag"
-                                        labelWidth={40}
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="add tag"
-                                                    onClick={this.handleAddTag}
-                                                    edge="end"
-                                                >
-                                                    <KeyboardReturnIcon />
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                    />
-                                </FormControl>
+                                <ChipFormControl
+                                    value={tag}
+                                    onChange={this.onInputTextChange}
+                                    handleClickIcon={this.handleAddTag}
+                                />
                                 <div className="chips-container">
                                     {tags.map(x => (
                                         <Chip

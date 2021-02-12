@@ -14,6 +14,12 @@ const ModalComponent = ({ modal, closeModal }) => {
         closeModal();
     };
 
+    const handleConfirm = () => {
+        modal.onConfirm();
+    }
+
+    const withConfirm = modal.onConfirm !== null;
+
     return (
         <Modal
             open={modal.open}
@@ -24,7 +30,7 @@ const ModalComponent = ({ modal, closeModal }) => {
             <Card raised={true} className="modal">
                 <CardContent>
                     <Typography id="modal-title" variant="subtitle1" gutterBottom>
-                        Ha ocurrido un error
+                        {withConfirm ? 'Confirmar' : 'Ha ocurrido un error'}
                     </Typography>
                     <Divider variant="fullWidth"/>
                     <Typography id="modal-description" variant="body1">
@@ -32,7 +38,9 @@ const ModalComponent = ({ modal, closeModal }) => {
                     </Typography>
                 </CardContent>
                 <CardActions className="modal-action">
-                    <Button color="primary" size="small" variant="contained" onClick={handleClose}>Aceptar</Button>
+                    {withConfirm &&
+                        <Button color="secondary" size="small" variant="outlined" onClick={handleClose}>Cancelar</Button>}
+                    <Button color="primary" size="small" variant="contained" onClick={withConfirm ? handleConfirm : handleClose}>Aceptar</Button>
                 </CardActions>
             </Card>
         </Modal>

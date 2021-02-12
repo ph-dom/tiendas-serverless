@@ -13,7 +13,15 @@ import EditIcon from '@material-ui/icons/Edit';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import moment from '../../config/moment';
 
-const ProductListItem = ({ storeName, productId, productName, productDescription, productCreationDate, productTags, onEdit }) => {
+const ProductListItem = ({
+    storeName,
+    productName,
+    productDescription,
+    productCreationDate,
+    productTags,
+    onEdit,
+    onDelete 
+}) => {
     return (
         <Grid item xs={12} sm={4} md={3}>
             <Card elevation={4}>
@@ -48,7 +56,7 @@ const ProductListItem = ({ storeName, productId, productName, productDescription
                     <IconButton color="primary" aria-label="add to favorites" onClick={onEdit}>
                         <EditIcon />
                     </IconButton>
-                    <IconButton color="secondary" aria-label="share">
+                    <IconButton color="secondary" aria-label="share" onClick={onDelete}>
                         <DeleteIcon />
                     </IconButton>
                 </CardActions>

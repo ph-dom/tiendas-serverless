@@ -1,6 +1,7 @@
 let modalReducerDefaultState = {
     open: false,
-    message: null
+    message: null,
+    onConfirm: null
 }
 
 const modalReducer = (state = modalReducerDefaultState, action) => {
