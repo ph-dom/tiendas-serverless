@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import firebaseApp from '../../config/firebase';
+import { auth } from '../../config/firebase';
 import { loginUser, logoutUser } from '../../redux/user/actions';
 import { openSnackbar } from '../../redux/snackbar/actions';
 import { startGetUserStore } from '../../redux/store/actions';
@@ -20,7 +20,7 @@ class BaseComponent extends React.Component {
     }
 
     componentDidMount() {
-        firebaseApp.auth().onAuthStateChanged(this.handleAuthStateChange);
+        auth.onAuthStateChanged(this.handleAuthStateChange);
     }
 
     handleAuthStateChange = (user) => {

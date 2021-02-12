@@ -1,4 +1,4 @@
-import firebaseApp from '../../config/firebase';
+import { auth } from '../../config/firebase';
 
 export const loginUser = (uid) => ({
     type: 'LOGIN_USER',
@@ -7,13 +7,13 @@ export const loginUser = (uid) => ({
 
 export const startSigninUserEmail = (email, password) => {
     return () => {
-        return firebaseApp.auth().createUserWithEmailAndPassword(email, password);
+        return auth.createUserWithEmailAndPassword(email, password);
     };
 };
 
 export const startLoginUser = (email, password, errorCallback) => {
     return () => {
-        return firebaseApp.auth().signInWithEmailAndPassword(email, password).catch(error => {
+        return auth.signInWithEmailAndPassword(email, password).catch(error => {
             errorCallback()
         });
     };
@@ -25,6 +25,6 @@ export const logoutUser = () => ({
 
 export const startLogoutUser = () => {
     return () => {
-        return firebaseApp.auth().signOut();
+        return auth.signOut();
     };
 };

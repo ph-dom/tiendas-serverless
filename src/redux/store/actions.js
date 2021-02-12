@@ -1,4 +1,4 @@
-import firebaseApp from '../../config/firebase';
+import firestore, { auth } from '../../config/firebase';
 import { getStoreProducts, startGetStoreProducts } from '../products/actions';
 const geofire = require('geofire-common');
 
@@ -12,8 +12,8 @@ export const startCreateUserStore = ({ name, address, description, location }, s
         const lat = location.lat;
         const lng = location.lng;
         const hash = geofire.geohashForLocation([location.lat, location.lng]);
-        const user = firebaseApp.auth().currentUser;
-        return firebaseApp.firestore().collection('stores').add({
+        const user = auth.currentUser;
+        return firestore.collection('stores').add({
             name,
             address,
             description,
@@ -43,9 +43,8 @@ export const startCreateUserStore = ({ name, address, description, location }, s
 
 export const startGetUserStore = (errorCallback) => {
     return (dispatch) => {
-        const user = firebaseApp.auth().currentUser;
-        return firebaseApp.firestore()
-        .collection('stores')
+        const user = auth.currentUser;
+        return firestore.collection('stores')
         .where('user.uid', '==', user.uid)
         .get()
         .then(querySnapshot => {
@@ -80,8 +79,7 @@ export const startUpdateUserStore = (id, { address, description, location }, suc
             lng,
             hash
         };
-        return firebaseApp.firestore()
-        .collection('stores')
+        return firestore.collection('stores')
         .doc(id)
         .update(updates)
         .then(() => {

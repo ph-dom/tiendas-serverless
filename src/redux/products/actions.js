@@ -1,4 +1,4 @@
-import firebaseApp, { timestamp } from '../../config/firebase';
+import firestore, { timestamp } from '../../config/firebase';
 
 const addStoreProduct = (product) => ({
     type: 'ADD_PRODUCT',
@@ -8,8 +8,7 @@ const addStoreProduct = (product) => ({
 export const startCreateStoreProduct = (product, successCallback, errorCallback) => {
     return (dispatch, getState) => {
         const idStore = getState().store.id;
-        return firebaseApp.firestore()
-        .collection(`/stores/${idStore}/products`)
+        return firestore.collection(`/stores/${idStore}/products`)
         .add({
             ...product,
             creationDate: timestamp.fromDate(new Date())
@@ -41,8 +40,7 @@ const updateStoreProduct = (idProduct, updates) => ({
 export const startUpdateStoreProduct = (idProduct, updates, successCallback, errorCallback) => {
     return (dispatch, getState) => {
         const idStore = getState().store.id;
-        return firebaseApp.firestore()
-        .collection(`/stores/${idStore}/products`)
+        return firestore.collection(`/stores/${idStore}/products`)
         .doc(idProduct)
         .update(updates)
         .then(() => {
@@ -64,8 +62,7 @@ const deleteStoreProduct = (idProduct) => ({
 export const startDeleteStoreProduct = (idProduct, successCallback, errorCallback) => {
     return (dispatch, getState) => {
         const idStore = getState().store.id;
-        return firebaseApp.firestore()
-        .collection(`/stores/${idStore}/products`)
+        return firestore.collection(`/stores/${idStore}/products`)
         .doc(idProduct)
         .delete()
         .then(() => {
@@ -86,8 +83,7 @@ export const getStoreProducts = (products) => ({
 
 export const startGetStoreProducts = (idStore) => {
     return new Promise((resolve, reject) => {
-        return firebaseApp.firestore()
-        .collection(`/stores/${idStore}/products`)
+        return firestore.collection(`/stores/${idStore}/products`)
         .get()
         .then(snapshot => {
             if(snapshot.size > 0) {

@@ -21,6 +21,8 @@ const productsReducer = (state = productsReducerDefaultState, action) => {
             return state.filter(product => product.id !== action.data);
         case 'GET_PRODUCTS':
             return action.data;
+        case 'LOGOUT_USER':
+            return productsReducerDefaultState;
         default:
             return state;
     }
