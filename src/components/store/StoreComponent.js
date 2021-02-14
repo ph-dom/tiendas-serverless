@@ -4,14 +4,15 @@ import { isEmpty, pick } from 'lodash';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 import InputTextOutlined from '../shared/inputs/textoutlined';
 import InputTextareaOutlined from '../shared/inputs/textareaoutlined'
 import InputButtonContained from '../shared/inputs/buttoncontained';
 import ButtonOutlined from '../shared/buttons/buttonoutlined';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 import ProductListItem from './ProductListItem';
+import ImageFileUpload from './ImageFileUpload';
 import { openModal } from '../../redux/modal/action';
 import { openSnackbar } from '../../redux/snackbar/actions';
 import { startCreateUserStore, startUpdateUserStore } from '../../redux/store/actions';
@@ -48,7 +49,7 @@ class StoreComponent extends React.Component {
             loadingSaveOrUpdate: true
         });
         const { store } = this.props;
-        if(isEmpty(store)) {
+        if (isEmpty(store)) {
             this.props.startCreateUserStore(
                 pick(this.state, ['name', 'description', 'location', 'address']),
                 this.openSuccessSnackbar,
@@ -56,7 +57,6 @@ class StoreComponent extends React.Component {
             );
         } else {
             this.props.startUpdateUserStore(
-                store.id,
                 pick(this.state, ['description', 'location', 'address']),
                 this.openSuccessSnackbar,
                 this.openErrorModal
@@ -75,11 +75,11 @@ class StoreComponent extends React.Component {
     }
 
     onInputTextChange = (event) => {
-		let prop = event.target.name;
-		let value = event.target.value;
-		this.setState({
-			[prop]: value
-		});
+        let prop = event.target.name;
+        let value = event.target.value;
+        this.setState({
+            [prop]: value
+        });
     }
 
     succesGetCurrentPositionCallback = (position) => {
@@ -128,7 +128,7 @@ class StoreComponent extends React.Component {
     onEditProduct = (idProduct) => {
         this.props.history.push(`/mitienda/producto/${idProduct}`);
     }
-    
+
     componentDidMount() {
         const { store } = this.props;
         isEmpty(store) && this.getLocation();
@@ -139,76 +139,81 @@ class StoreComponent extends React.Component {
         const { store } = this.props;
         return (
             <React.Fragment>
-            <div className="container">
-                <Grid container>
-                    <Grid item xs={12} sm={5}>
-                        <Paper className="paper" variant="outlined">
-                            <Typography variant="h5">{isEmpty(store) ? 'Crear Tienda' : name }</Typography>
-                            <form id="store-form" onSubmit={this.handleSubmitForm} autoComplete="off" className="tiendas-form tiendas-form__full-width">
-                                <div className="tiendas-form-inputs">
-                                    {isEmpty(store) && <InputTextOutlined
-                                        idInput="StoreInput-name"
-                                        nameInput="name"
-                                        typeInput="text"
-                                        textLabel="Nombre"
-                                        value={name}
-                                        onChange={this.onInputTextChange}
-                                    />}
-                                    <InputTextareaOutlined
-                                        idInput="StoreInput-description"
-                                        nameInput="description"
-                                        textLabel="Descripción"
-                                        value={description}
-                                        onChange={this.onInputTextChange}
-                                    />
-                                    <InputTextOutlined
-                                        idInput="StoreInput-address"
-                                        nameInput="address"
-                                        typeInput="text"
-                                        textLabel="Dirección"
-                                        value={address}
-                                        onChange={this.onInputTextChange}
-                                    />
-                                </div>
-                                <div className="tiendas-form-actions">
-                                    {loadingLocation ? 
-                                        <CircularProgress color="secondary" /> : 
-                                        <ButtonOutlined
-                                            onClick={this.getLocation}
-                                            text="Actualizar ubicación"
+                <div className="container">
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={5}>
+                            <Paper className="paper" variant="outlined">
+                                <Typography variant="h5">{isEmpty(store) ? 'Crear Tienda' : name}</Typography>
+                                <form id="store-form" onSubmit={this.handleSubmitForm} autoComplete="off" className="tiendas-form tiendas-form__full-width">
+                                    <div className="tiendas-form-inputs">
+                                        {isEmpty(store) && <InputTextOutlined
+                                            idInput="StoreInput-name"
+                                            nameInput="name"
+                                            typeInput="text"
+                                            textLabel="Nombre"
+                                            value={name}
+                                            onChange={this.onInputTextChange}
                                         />}
-                                    {loadingSaveOrUpdate ? 
-                                        <CircularProgress color="primary" /> :
-                                        <InputButtonContained
-                                            idForm="store-form"
-                                            text="Guardar"
+                                        <InputTextareaOutlined
+                                            idInput="StoreInput-description"
+                                            nameInput="description"
+                                            textLabel="Descripción"
+                                            value={description}
+                                            onChange={this.onInputTextChange}
                                         />
-                                    }
-                                </div>
-                            </form>
-                        </Paper>
+                                        <InputTextOutlined
+                                            idInput="StoreInput-address"
+                                            nameInput="address"
+                                            typeInput="text"
+                                            textLabel="Dirección"
+                                            value={address}
+                                            onChange={this.onInputTextChange}
+                                        />
+                                    </div>
+                                    <div className="tiendas-form-actions">
+                                        {loadingLocation ?
+                                            <CircularProgress color="secondary" /> :
+                                            <ButtonOutlined
+                                                onClick={this.getLocation}
+                                                text="Actualizar ubicación"
+                                            />}
+                                        {loadingSaveOrUpdate ?
+                                            <CircularProgress color="primary" /> :
+                                            <InputButtonContained
+                                                idForm="store-form"
+                                                text="Guardar"
+                                            />
+                                        }
+                                    </div>
+                                </form>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12} sm={7}>
+                            <Paper className="paper" variant="outlined">
+                                <ImageFileUpload />
+                            </Paper>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </div>
-            <div className="container">
-                <Grid container spacing={2}>
-                    {this.props.products.map(product => (
-                        <ProductListItem
-                            key={product.id}
-                            productCreationDate={product.creationDate}
-                            productDescription={product.description}
-                            productName={product.name}
-                            productTags={product.tags}
-                            storeName={store.name}
-                            onEdit={() => this.onEditProduct(product.id)}
-                            onDelete={() => this.onDeleteProduct(product.id)}
-                        />
-                    ))}
-                </Grid>
-            </div>
-            <Fab color="primary" aria-label="add" className="add-product" onClick={() => this.props.history.push('/mitienda/producto')}>
-                <AddIcon />
-            </Fab>
+                </div>
+                <div className="container">
+                    <Grid container spacing={2}>
+                        {this.props.products.map(product => (
+                            <ProductListItem
+                                key={product.id}
+                                productCreationDate={product.creationDate}
+                                productDescription={product.description}
+                                productName={product.name}
+                                productTags={product.tags}
+                                storeName={store.name}
+                                onEdit={() => this.onEditProduct(product.id)}
+                                onDelete={() => this.onDeleteProduct(product.id)}
+                            />
+                        ))}
+                    </Grid>
+                </div>
+                <Fab color="primary" aria-label="add" className="add-product" onClick={() => this.props.history.push('/mitienda/producto')}>
+                    <AddIcon />
+                </Fab>
             </React.Fragment>
         );
     }
@@ -223,7 +228,7 @@ const mapDispatchToProps = (dispatch) => ({
     openModal: (message, onConfirm) => dispatch(openModal(message, onConfirm)),
     openSnackbar: (message) => dispatch(openSnackbar(message)),
     startCreateUserStore: (store, successCallback, errorCallback) => dispatch(startCreateUserStore(store, successCallback, errorCallback)),
-    startUpdateUserStore: (id, updates, successCallback, errorCallback) => dispatch(startUpdateUserStore(id, updates, successCallback, errorCallback)),
+    startUpdateUserStore: (updates, successCallback, errorCallback) => dispatch(startUpdateUserStore(updates, successCallback, errorCallback)),
     startDeleteStoreProduct: (idProduct, successCallback, errorCallback) => dispatch(startDeleteStoreProduct(idProduct, successCallback, errorCallback))
 });
 
