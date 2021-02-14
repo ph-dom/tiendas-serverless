@@ -38,7 +38,7 @@ class GoogleMapComponent extends React.Component {
             });
             new google.maps.Marker({
                 position: new google.maps.LatLng(lat, lng),
-                icon: '/currentlocation.svg',
+                icon: '/imgs/currentlocation.svg',
                 map: this.map,
                 title: "Estas aquí"
             });

@@ -4,11 +4,15 @@ import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { startUploadPhotoUserStore } from '../../redux/store/actions';
+import { openModal } from '../../redux/modal/action';
+import { openSnackbar } from '../../redux/snackbar/actions';
 
 const ImageFileUpload = (props) => {
     const inputFileRef = React.useRef(null);
     const [fileName, setFileName] = React.useState('');
+    const [isUploading, setIsUploading] = React.useState(false);
     const { url } = props.store;
 
     const handleChangeFile = (event) => {
@@ -17,10 +21,14 @@ const ImageFileUpload = (props) => {
 
     const handleUploadImage = () => {
         const file = inputFileRef.current.files[0];
+        setIsUploading(true);
         props.startUploadPhotoUserStore(file, undefined, undefined, () => {
-            console.log('lo logre :D');
+            props.openSnackbar('Imágen subida correctamente.');
+            setIsUploading(false);
+            setFileName('');
         }, () => {
-            console.log('kueck!')
+            props.openMOdal('Error al cargar imágen. Intentar nuevamente en breve.');
+            setIsUploading(false);
         });
     }
 
@@ -46,12 +54,15 @@ const ImageFileUpload = (props) => {
                     {fileName}
                 </Typography>
             </label>
-            {fileName && <div>
-                <Button variant="contained" color="primary" onClick={handleUploadImage}>
-                    Guardar Imágen
-                </Button>
-            </div>}
-            <div className="img-display" style={{backgroundImage: `url("${url}")`}} />
+            <div>
+                {(fileName && !isUploading) && 
+                    <Button variant="contained" color="primary" onClick={handleUploadImage}>
+                        Guardar Imágen
+                    </Button>
+                }
+                {(fileName && isUploading) && <CircularProgress color="primary"/> }
+            </div>
+            <div className="img-display" style={{backgroundImage: `url("${url || '/imgs/noimageavailable.svg'}")`}} />
         </React.Fragment>
     );
 };
@@ -61,7 +72,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    startUploadPhotoUserStore: (photo, onSnapshot, onError, successCallback, errorCallback) => dispatch(startUploadPhotoUserStore(photo, onSnapshot, onError, successCallback, errorCallback)) 
+    startUploadPhotoUserStore: (photo, onSnapshot, onError, successCallback, errorCallback) => dispatch(startUploadPhotoUserStore(photo, onSnapshot, onError, successCallback, errorCallback)),
+    openModal: (message) => dispatch(openModal(message)),
+    openSnackbar: (message) => dispatch(openSnackbar(message))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ImageFileUpload);

@@ -41,7 +41,7 @@ const ProductListItem = ({
                 />
                 <CardMedia
                     style={{ height: 0, paddingTop: '56.25%' }}
-                    image="/currentlocation.svg"
+                    image="/imgs/currentlocation.svg"
                     title={productName}
                 />
                 <CardContent>
