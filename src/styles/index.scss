@@ -13,12 +13,22 @@ body {
     text-align: center;
 }
 
-.img-display {
+.no-img-store {
     background-color: #ddd;
     background-repeat: no-repeat;
     background-position: center;
     background-size: auto;
     width: 250px;
     height: 250px;
+    margin-top: 10px;
+}
+
+.no-img-product {
+    background-color: #ddd;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto;
+    width: 250px;
+    height: 180px;
     margin-top: 10px;
 }

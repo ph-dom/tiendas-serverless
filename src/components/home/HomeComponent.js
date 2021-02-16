@@ -1,9 +1,10 @@
 import React from 'react';
+import Typography from '@material-ui/core/Typography';
 
 const HomeComponent = () => (
-    <React.Fragment>
-        <h1>Cargando...</h1>
-    </React.Fragment>
+    <div className="container">
+        <Typography variant="h4">Tiendas cercanas</Typography>
+    </div>
 );
 
 export default HomeComponent;

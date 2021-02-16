@@ -22,12 +22,12 @@ const ImageFileUpload = (props) => {
     const handleUploadImage = () => {
         const file = inputFileRef.current.files[0];
         setIsUploading(true);
-        props.startUploadPhotoUserStore(file, undefined, undefined, () => {
+        props.startUploadPhotoUserStore(file, () => {
             props.openSnackbar('Imágen subida correctamente.');
             setIsUploading(false);
             setFileName('');
         }, () => {
-            props.openMOdal('Error al cargar imágen. Intentar nuevamente en breve.');
+            props.openModal('Error al cargar imágen. Intentar nuevamente en breve.');
             setIsUploading(false);
         });
     }
@@ -62,7 +62,7 @@ const ImageFileUpload = (props) => {
                 }
                 {(fileName && isUploading) && <CircularProgress color="primary"/> }
             </div>
-            <div className="img-display" style={{backgroundImage: `url("${url || '/imgs/noimageavailable.svg'}")`}} />
+            <div className="no-img-store" style={{backgroundImage: `url("${url || '/imgs/noimageavailable.svg'}")`}} />
         </React.Fragment>
     );
 };

@@ -7,6 +7,9 @@ import AddIcon from '@material-ui/icons/Add';
 import ProductListItem from './ProductListItem';
 import ImageFileUpload from './ImageFileUpload';
 import StoreEditor from './StoreEditor';
+import { openModal } from '../../redux/modal/action';
+import { openSnackbar } from '../../redux/snackbar/actions';
+import { startDeleteStoreProduct } from '../../redux/products/actions';
 import './StoreStyles.scss';
 
 class StoreComponent extends React.Component {
@@ -15,7 +18,7 @@ class StoreComponent extends React.Component {
         this.props.openModal('¿Seguro que deseas eliminar este producto?', () => {
             this.props.startDeleteStoreProduct(
                 idProduct,
-                () => this.props.openSnackbar('Ubicación de tienda actualizada.'),
+                () => this.props.openSnackbar('Producto eliminado.'),
                 () => this.props.openModal('Error al eliminar producto, intentar nuevamente en breve.')
             );
         });
@@ -48,6 +51,7 @@ class StoreComponent extends React.Component {
                         {products.map(product => (
                             <ProductListItem
                                 key={product.id}
+                                productUrl={product.url}
                                 productCreationDate={product.creationDate}
                                 productDescription={product.description}
                                 productName={product.name}
@@ -72,5 +76,11 @@ const mapStateToProps = (state) => ({
     products: state.products
 });
 
-export default connect(mapStateToProps)(StoreComponent);
+const mapDispatchToProps = (dispatch) => ({
+    openModal: (message, callback) => dispatch(openModal(message, callback)),
+    openSnackbar: (message) => dispatch(openSnackbar(message)),
+    startDeleteStoreProduct: (idProduct, successCallback, errorCallback) => dispatch(startDeleteStoreProduct(idProduct, successCallback, errorCallback))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(StoreComponent);
 

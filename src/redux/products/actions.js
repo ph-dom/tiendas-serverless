@@ -1,4 +1,4 @@
-import firestore, { timestamp } from '../../config/firebase';
+import firestore, { timestamp, storage } from '../../config/firebase';
 
 const addStoreProduct = (product) => ({
     type: 'ADD_PRODUCT',
@@ -105,3 +105,40 @@ export const startGetStoreProducts = (idStore) => {
         });
     });
 };
+
+export const startUploadStoreProduct = (idProduct, photo, successCallback, errorCallback) => {
+    let updates = {};
+    return (dispatch, getState) => {
+        const idStore = getState().store.id;
+        return uploadProductImage(idStore, idProduct, photo).then(downloadURL => {
+            updates = {
+                url: downloadURL
+            };
+            return firestore.collection(`/stores/${idStore}/products`).doc(idProduct).update(updates);
+        }).then(() => {
+            dispatch(updateStoreProduct(idProduct, updates));
+            successCallback();
+        }).catch(error => {
+            console.log(error);
+            errorCallback();
+        });
+    };
+};
+
+export const uploadProductImage = (idStore, idProduct, photo) => {
+    return new Promise((resolve, reject) => {
+        const uploadTask = storage.ref(`/images/product/${idStore}/${idProduct}`).put(photo);
+        uploadTask.on(
+            'state_changed',
+            undefined,
+            () => {
+                reject('Error al cargar archivo')
+            },
+            () => {
+                uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+                    resolve(downloadURL);
+                });
+            }
+        );
+    });
+}

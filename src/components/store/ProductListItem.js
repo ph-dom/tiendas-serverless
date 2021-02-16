@@ -15,6 +15,7 @@ import moment from '../../config/moment';
 
 const ProductListItem = ({
     storeName,
+    productUrl,
     productName,
     productDescription,
     productCreationDate,
@@ -41,7 +42,7 @@ const ProductListItem = ({
                 />
                 <CardMedia
                     style={{ height: 0, paddingTop: '56.25%' }}
-                    image="/imgs/currentlocation.svg"
+                    image={productUrl || '/imgs/noimageavailable2.svg'}
                     title={productName}
                 />
                 <CardContent>

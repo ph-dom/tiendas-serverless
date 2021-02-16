@@ -1,0 +1,6 @@
+<svg version="1.1" width="250" height="180" viewBox="0 0 250 180" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="60" cy="120" r="35" fill="pink" stroke="none"></circle>
+    <polygon points="80,100 140,20, 200,100" fill="purple" stroke="none"></polygon>
+    <polygon points="140,80 220,80 220,160 140,160" fill="orange" stroke="none"></polygon>
+    <text x="125" y="175" text-anchor="middle" font-family="Georgia">SIN IMÁGEN DISPONIBLE</text>
+</svg>

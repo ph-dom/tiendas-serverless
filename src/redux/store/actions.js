@@ -99,23 +99,39 @@ export const startUpdateUserStore = ({ address, description, location }, success
 /*
  * basado en https://firebase.google.com/docs/storage/web/upload-files
  */
-export const startUploadPhotoUserStore = (photo, onSnapshot, onError, successCallback, errorCallback) => {
+export const startUploadPhotoUserStore = (photo, successCallback, errorCallback) => {
+    let updates = {};
     return (dispatch, getState) => {
         const idStore = getState().store.id;
-        const uploadTask = storage.ref(`/images/store/${idStore}`).put(photo);
-        uploadTask.on('state_changed', onSnapshot, onError, () => {
-            uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
-                const updates = {
-                    url: downloadURL
-                };
-                firestore.collection('stores').doc(idStore).update(updates).then(() => {
-                    dispatch(setUserStore(updates));
-                    successCallback();
-                }).catch(error => {
-                    console.log(error);
-                    errorCallback();
-                })
-            });
+        return uploadStoreImage(idStore, photo).then(downloadUrl => {
+            updates = {
+                url: downloadUrl
+            };
+            return firestore.collection('stores').doc(idStore).update(updates);
+        }).then(() => {
+            dispatch(setUserStore(updates));
+            successCallback();
+        }).catch(error => {
+            console.log(error);
+            errorCallback();
         })
     };
+};
+
+const uploadStoreImage = (idStore, photo) => {
+    return new Promise((resolve, reject) => {
+        const uploadTask = storage.ref(`/images/store/${idStore}`).put(photo);
+        uploadTask.on(
+            'state_changed',
+            undefined,
+            () => {
+                reject('Error al cargar imágen.')
+            },
+            () => {
+                uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+                    resolve(downloadURL);
+                });
+            }
+        );
+    });
 };

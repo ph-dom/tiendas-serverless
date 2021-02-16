@@ -6,21 +6,26 @@ import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import CloseIcon from '@material-ui/icons/Close';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import InputTextOutlined from '../shared/inputs/textoutlined';
 import InputTextareaOutlined from '../shared/inputs/textareaoutlined';
 import InputButtonContained from '../shared/inputs/buttoncontained';
 import ChipFormControl from './chipformcontrol';
-import { startCreateStoreProduct, startUpdateStoreProduct } from '../../redux/products/actions';
+import { startCreateStoreProduct, startUpdateStoreProduct, startUploadStoreProduct } from '../../redux/products/actions';
 import { openSnackbar } from '../../redux/snackbar/actions';
 import { openModal } from '../../redux/modal/action';
 import './ProductsStyles.scss';
 
 class ProductsComponent extends React.Component {
+    inputFileRef = React.createRef(null);
+
     constructor(props) {
         super(props);
         const { product } = this.props;
-        if(isEmpty(product)) {
+        if (isEmpty(product)) {
             this.state = {
                 name: '',
                 price: '',
@@ -36,6 +41,9 @@ class ProductsComponent extends React.Component {
                 tag: '',
                 tags: product.tags,
                 description: product.description,
+                url: product.url,
+                fileName: '',
+                isUploading: false,
                 loadingSaveOrUpdate: false
             };
         }
@@ -53,16 +61,16 @@ class ProductsComponent extends React.Component {
         this.setState({ loadingSaveOrUpdate: true })
         event.preventDefault();
         const { product } = this.props;
-        if(isEmpty(product)) {
+        if (isEmpty(product)) {
             this.props.startCreateStoreProduct(
-                pick(this.state, ['name','price','tags','description']),
+                pick(this.state, ['name', 'price', 'tags', 'description']),
                 this.openSnackbarSuccessCallback,
                 this.openModalErrorCallback
             );
         } else {
             this.props.startUpdateStoreProduct(
                 product.id,
-                pick(this.state, ['price','tags','description']),
+                pick(this.state, ['price', 'tags', 'description']),
                 this.openSnackbarSuccessCallback,
                 this.openModalErrorCallback
             );
@@ -99,70 +107,130 @@ class ProductsComponent extends React.Component {
         });
     }
 
+    handleChangeFile = (event) => {
+        this.setState({
+            fileName: event.target.files[0].name
+        });
+    }
+
+    handleUploadImage = () => {
+        const file = this.inputFileRef.current.files[0];
+        const idProduct = this.props.product.id;
+        this.setState({ isUploading: true });
+        this.props.startUploadStoreProduct(idProduct, file, () => {
+            this.props.openSnackbar('Imágen subida correctamente.');
+            this.setState({
+                isUploading: true,
+                fileName: ''
+            });
+        }, () => {
+            this.props.openModal('Error al cargar imágen. Intentar nuevamente en breve.');
+            this.setState({
+                isUploading: true
+            });
+        });
+    }
+
     render() {
-        const { name, price, tags, tag, description, loadingSaveOrUpdate } = this.state;
+        const { name, price, tags, tag, description, loadingSaveOrUpdate, isUploading, fileName } = this.state;
         const { product } = this.props;
         return (
-            <Grid container className="container">
-                <Grid item xs={12} sm={5}>
-                    <Paper className="paper" variant="outlined">
-                        <Typography variant="h5">{isEmpty(product) ? 'Crear Producto' : name}</Typography>
-                        <form id="product-form" onSubmit={this.handleSubmitForm} autoComplete="off" className="tiendas-form tiendas-form__full-width">
-                            <div className="tiendas-form-inputs">
-                                {isEmpty(product) && <InputTextOutlined
-                                    idInput="ProductInput-name"
-                                    nameInput="name"
-                                    typeInput="text"
-                                    textLabel="Nombre"
-                                    value={name}
-                                    onChange={this.onInputTextChange}
-                                />}
-                                <InputTextOutlined
-                                    idInput="ProductInput-price"
-                                    nameInput="price"
-                                    typeInput="number"
-                                    textLabel="Precio"
-                                    value={price}
-                                    onChange={this.onInputTextChange}
-                                />
-                                <InputTextareaOutlined
-                                    idInput="ProductInput-description"
-                                    nameInput="description"
-                                    textLabel="Descripción"
-                                    value={description}
-                                    onChange={this.onInputTextChange}
-                                />
-                                <ChipFormControl
-                                    value={tag}
-                                    onChange={this.onInputTextChange}
-                                    handleClickIcon={this.handleAddTag}
-                                />
-                                <div className="chips-container">
-                                    {tags.map(x => (
-                                        <Chip
-                                            key={x}
-                                            onDelete={() => this.handleDeleteChip(x)}
-                                            label={x}
-                                            deleteIcon={<CloseIcon />}
-                                            color="secondary"
-                                            size="small"
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="tiendas-form-actions">
-                                {loadingSaveOrUpdate ?
-                                    <CircularProgress color="primary" /> :
-                                    <InputButtonContained
-                                        idForm="product-form"
-                                        text="Guardar"
+            <div className="container">
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={5}>
+                        <Paper className="paper" variant="outlined">
+                            <Typography variant="h5">{isEmpty(product) ? 'Crear Producto' : name}</Typography>
+                            <form id="product-form" onSubmit={this.handleSubmitForm} autoComplete="off" className="tiendas-form tiendas-form__full-width">
+                                <div className="tiendas-form-inputs">
+                                    {isEmpty(product) && <InputTextOutlined
+                                        idInput="ProductInput-name"
+                                        nameInput="name"
+                                        typeInput="text"
+                                        textLabel="Nombre"
+                                        value={name}
+                                        onChange={this.onInputTextChange}
+                                    />}
+                                    <InputTextOutlined
+                                        idInput="ProductInput-price"
+                                        nameInput="price"
+                                        typeInput="number"
+                                        textLabel="Precio"
+                                        value={price}
+                                        onChange={this.onInputTextChange}
                                     />
+                                    <InputTextareaOutlined
+                                        idInput="ProductInput-description"
+                                        nameInput="description"
+                                        textLabel="Descripción"
+                                        value={description}
+                                        onChange={this.onInputTextChange}
+                                    />
+                                    <ChipFormControl
+                                        value={tag}
+                                        onChange={this.onInputTextChange}
+                                        handleClickIcon={this.handleAddTag}
+                                    />
+                                    <div className="chips-container">
+                                        {tags.map(x => (
+                                            <Chip
+                                                key={x}
+                                                onDelete={() => this.handleDeleteChip(x)}
+                                                label={x}
+                                                deleteIcon={<CloseIcon />}
+                                                color="secondary"
+                                                size="small"
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="tiendas-form-actions">
+                                    {loadingSaveOrUpdate ?
+                                        <CircularProgress color="primary" /> :
+                                        <InputButtonContained
+                                            idForm="product-form"
+                                            text="Guardar"
+                                        />
+                                    }
+                                </div>
+                            </form>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={5}>
+                        <Paper className="paper" variant="outlined">
+                            <Typography variant="h5">
+                                Imágen
+                            </Typography>
+                            <input
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                id="store-image-file"
+                                type="file"
+                                multiple={false}
+                                ref={this.inputFileRef}
+                                onChange={this.handleChangeFile}
+                            />
+                            {!isEmpty(product) &&
+                                <label htmlFor="store-image-file">
+                                    <IconButton color="primary" aria-label="upload picture" component="span">
+                                        <PhotoCamera />
+                                    </IconButton>
+                                    <Typography variant="body1" component="span">
+                                        {fileName}
+                                    </Typography>
+                                </label>}
+                            <div>
+                                {(fileName && !isUploading) &&
+                                    <Button variant="contained" color="primary" onClick={this.handleUploadImage}>
+                                        Guardar Imágen
+                                </Button>
                                 }
+                                {(fileName && isUploading) && <CircularProgress color="primary" />}
                             </div>
-                        </form>
-                    </Paper>
+                            <div className="no-img-product" style={{ backgroundImage: `url("${product.url || '/imgs/noimageavailable2.svg'}")` }} />
+                        </Paper>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </div>
         );
     }
 }
@@ -177,6 +245,7 @@ const mapDispatchStateToProps = (state, props) => {
 const mapDispatchToProps = (dispatch) => ({
     startCreateStoreProduct: (product, successCallback, errorCallback) => dispatch(startCreateStoreProduct(product, successCallback, errorCallback)),
     startUpdateStoreProduct: (idProduct, updates, successCallback, errorCallback) => dispatch(startUpdateStoreProduct(idProduct, updates, successCallback, errorCallback)),
+    startUploadStoreProduct: (idProduct, photo, successCallback, errorCallback) => dispatch(startUploadStoreProduct(idProduct, photo, successCallback, errorCallback)),
     openSnackbar: (message) => dispatch(openSnackbar(message)),
     openModal: (message) => dispatch(openModal(message))
 });
