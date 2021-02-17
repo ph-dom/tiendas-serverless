@@ -7,6 +7,7 @@ import storeReducer from './store/reducer';
 import producsReducer from './products/reducer';
 import nearbyStoresReducer from './nearbystores/reducer';
 import locationReducer from './location/reducer';
+import nearbyProductsReducer from './nearbyproducts/reducer';
 
 const store = createStore(
     combineReducers({
@@ -16,6 +17,7 @@ const store = createStore(
         modal: modalReducer,
         products: producsReducer,
         nearbyStores: nearbyStoresReducer,
+        nearbyProducts: nearbyProductsReducer,
         location: locationReducer
     }),
     compose(applyMiddleware(thunk))

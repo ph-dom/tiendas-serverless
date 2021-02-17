@@ -1,5 +1,6 @@
 import firestore from '../../config/firebase';
 import { isEmpty } from 'lodash';
+import { setNearbyProducts } from '../nearbyproducts/actions';
 const geofire = require('geofire-common');
 
 const setNearbyStores = (stores) => ({
@@ -10,8 +11,10 @@ const setNearbyStores = (stores) => ({
 export const startGetNearbyStores = () => {
     return (dispatch, getState) => {
         const location = getState().location;
+        const uid = getState().user.uid;
         if(isEmpty(location)) {
             dispatch(setNearbyStores([]));
+            dispatch(setNearbyProducts([]));
             return Promise.reject();
         }
         const center = [location.lat, location.lng];
@@ -32,12 +35,13 @@ export const startGetNearbyStores = () => {
                 for (const doc of snap.docs) {
                     const lat = doc.get('lat');
                     const lng = doc.get('lng');
+                    const user = doc.get('user');
 
                     // We have to filter out a few false positives due to GeoHash
                     // accuracy, but most will match
                     const distanceInKm = geofire.distanceBetween([lat, lng], center);
                     const distanceInM = distanceInKm * 1000;
-                    if (distanceInM <= 1000000) {
+                    if (distanceInM <= 1000000 && user.uid !== uid) {
                         matchingDocs.push(doc);
                     }
                 }
@@ -45,16 +49,38 @@ export const startGetNearbyStores = () => {
 
             return matchingDocs;
         }).then(matchingDocs => {
-            const nearbyStores = [];
+            const nearbyStores = [], nearbyProductsPromises = [];
             matchingDocs.forEach(matchingDoc => {
-                nearbyStores.push({
+                const store = {
                     id: matchingDoc.id,
                     ...matchingDoc.data()
-                });
+                }
+                nearbyStores.push(store);
+                nearbyProductsPromises.push(getStoreProduct(store));
             });
             dispatch(setNearbyStores(nearbyStores));
+            return Promise.all(nearbyProductsPromises);
+        }).then(productsMatrix => {
+            let products = [];
+            for(let prods of productsMatrix) {
+                products = products.concat(prods);
+            }
+            dispatch(setNearbyProducts(products));
         }).catch(error => {
             console.log(error);
         });
     };
+};
+
+const getStoreProduct = async (store) => {
+    const querySnapshot = await firestore.collection(`/stores/${store.id}/products`).get();
+    const products = [];
+    querySnapshot.forEach(doc => {
+        products.push({
+            id: doc.id,
+            ...doc.data(),
+            store
+        })
+    })
+    return products;
 };
