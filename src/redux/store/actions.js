@@ -7,8 +7,9 @@ const setUserStore = (store) => ({
     data: store
 });
 
-export const startCreateUserStore = ({ name, address, description, location }, successCallback, errorCallback) => {
-    return (dispatch) => {
+export const startCreateUserStore = ({ name, address, description }, successCallback, errorCallback) => {
+    return (dispatch, getState) => {
+        const location = getState().location;
         const lat = location.lat;
         const lng = location.lng;
         const hash = geofire.geohashForLocation([location.lat, location.lng]);
@@ -69,8 +70,9 @@ export const startGetUserStore = (errorCallback) => {
     };
 };
 
-export const startUpdateUserStore = ({ address, description, location }, successCallback, errorCallback) => {
+export const startUpdateUserStore = ({ address, description }, successCallback, errorCallback) => {
     return (dispatch, getState) => {
+        const location = getState().location;
         const idStore = getState().store.id;
         const lat = location.lat;
         const lng = location.lng;

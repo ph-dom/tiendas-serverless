@@ -6,11 +6,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import InputTextOutlined from '../shared/inputs/textoutlined';
 import InputTextareaOutlined from '../shared/inputs/textareaoutlined'
 import InputButtonContained from '../shared/inputs/buttoncontained';
-import ButtonOutlined from '../shared/buttons/buttonoutlined';
 import { openModal } from '../../redux/modal/action';
 import { openSnackbar } from '../../redux/snackbar/actions';
 import { startCreateUserStore, startUpdateUserStore } from '../../redux/store/actions';
-import { startDeleteStoreProduct } from '../../redux/products/actions';
 
 class StoreEditor extends React.Component {
     constructor(props) {
@@ -19,19 +17,12 @@ class StoreEditor extends React.Component {
         this.state = isEmpty(store) ? {
             name: '',
             description: '',
-            location: null,
             address: '',
-            loadingLocation: false,
             loadingSaveOrUpdate: false
         } : {
             name: store.name,
             description: store.description,
-            location: {
-                lat: store.lat,
-                lng: store.lng
-            },
             address: store.address,
-            loadingLocation: false,
             loadingSaveOrUpdate: false
         };
     }
@@ -44,13 +35,13 @@ class StoreEditor extends React.Component {
         const { store } = this.props;
         if (isEmpty(store)) {
             this.props.startCreateUserStore(
-                pick(this.state, ['name', 'description', 'location', 'address']),
+                pick(this.state, ['name', 'description', 'address']),
                 this.openSuccessSnackbar,
                 this.openErrorModal
             );
         } else {
             this.props.startUpdateUserStore(
-                pick(this.state, ['description', 'location', 'address']),
+                pick(this.state, ['description', 'address']),
                 this.openSuccessSnackbar,
                 this.openErrorModal
             );
@@ -75,45 +66,8 @@ class StoreEditor extends React.Component {
         });
     }
 
-    getLocation = () => {
-        this.setState({
-            loadingLocation: true
-        });
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                this.succesGetCurrentPositionCallback,
-                this.errorGetCurrentPositionCallback
-            );
-        } else {
-            this.errorGetCurrentPositionCallback();
-        }
-    }
-
-    succesGetCurrentPositionCallback = (position) => {
-        let lat = position.coords.latitude;
-        let lng = position.coords.longitude;
-        this.setState({
-            location: {
-                lat,
-                lng
-            },
-            loadingLocation: false
-        });
-        this.props.openSnackbar('Ubicación de tienda actualizada.');
-    }
-
-    errorGetCurrentPositionCallback = () => {
-        this.props.openModal('No pudimos acceder a tu ubicación.');
-        this.setState({ loadingSaveOrUpdate: false });
-    }
-
-    componentDidMount() {
-        const { store } = this.props;
-        isEmpty(store) && this.getLocation();
-    }
-
     render() {
-        const { name, description, address, loadingLocation, loadingSaveOrUpdate } = this.state;
+        const { name, description, address, loadingSaveOrUpdate } = this.state;
         const { store } = this.props;
         return (
             <React.Fragment>
@@ -145,12 +99,6 @@ class StoreEditor extends React.Component {
                         />
                     </div>
                     <div className="tiendas-form-actions">
-                        {loadingLocation ?
-                            <CircularProgress color="secondary" /> :
-                            <ButtonOutlined
-                                onClick={this.getLocation}
-                                text="Actualizar ubicación"
-                            />}
                         {loadingSaveOrUpdate ?
                             <CircularProgress color="primary" /> :
                             <InputButtonContained
@@ -166,15 +114,15 @@ class StoreEditor extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    store: state.store
+    store: state.store,
+    location: state.location
 });
 
 const mapDispatchToProps = (dispatch) => ({
     openModal: (message, onConfirm) => dispatch(openModal(message, onConfirm)),
     openSnackbar: (message) => dispatch(openSnackbar(message)),
     startCreateUserStore: (store, successCallback, errorCallback) => dispatch(startCreateUserStore(store, successCallback, errorCallback)),
-    startUpdateUserStore: (updates, successCallback, errorCallback) => dispatch(startUpdateUserStore(updates, successCallback, errorCallback)),
-    startDeleteStoreProduct: (idProduct, successCallback, errorCallback) => dispatch(startDeleteStoreProduct(idProduct, successCallback, errorCallback))
+    startUpdateUserStore: (updates, successCallback, errorCallback) => dispatch(startUpdateUserStore(updates, successCallback, errorCallback))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StoreEditor);
