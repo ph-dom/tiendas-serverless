@@ -31,6 +31,10 @@ const getCurrentLocation = () => {
                 },
                 (error) => {
                     reject(error.message);
+                },
+                {
+                    enableHighAccuracy: true,
+                    maximumAge: 10000
                 }
             );
         } else {

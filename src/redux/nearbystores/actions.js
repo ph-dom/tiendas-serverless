@@ -1,4 +1,5 @@
 import firestore from '../../config/firebase';
+import { isEmpty } from 'lodash';
 const geofire = require('geofire-common');
 
 const setNearbyStores = (stores) => ({
@@ -9,6 +10,10 @@ const setNearbyStores = (stores) => ({
 export const startGetNearbyStores = () => {
     return (dispatch, getState) => {
         const location = getState().location;
+        if(isEmpty(location)) {
+            dispatch(setNearbyStores([]));
+            return Promise.reject();
+        }
         const center = [location.lat, location.lng];
         const bounds = geofire.geohashQueryBounds(center, 1000000);
         const promises = [];
