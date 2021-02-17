@@ -9,7 +9,6 @@ const HomeComponent = (props) => (
         <Typography variant="h4">Productos:</Typography>
         <Grid container spacing={2}>
             {props.nearbyProducts.map(product => {
-                console.log(product);
                 return (
                     <ProductListItem
                         key={product.id}

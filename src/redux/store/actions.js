@@ -61,11 +61,14 @@ export const startGetUserStore = (errorCallback) => {
             }
         })
         .then(products => {
-            dispatch(getStoreProducts(products));
+            dispatch(getStoreProducts(products || []));
         })
         .catch(error => {
             console.log(error);
+            dispatch(setUserStore({}));
+            dispatch(getStoreProducts([]));
             errorCallback();
+            
         });
     };
 };
