@@ -39,7 +39,7 @@ class StoreComponent extends React.Component {
                                 <StoreEditor />
                             </Paper>
                         </Grid>
-                        <Grid item xs={12} sm={7}>
+                        <Grid item xs={12} sm={5}>
                             <Paper className="paper" variant="outlined">
                                 <ImageFileUpload />
                             </Paper>

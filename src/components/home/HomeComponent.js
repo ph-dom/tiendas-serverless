@@ -17,7 +17,6 @@ const HomeComponent = (props) => (
                 );
             })}
         </Grid>
-        
     </div>
 );
 

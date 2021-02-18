@@ -13,7 +13,6 @@ const ImageFileUpload = (props) => {
     const inputFileRef = React.useRef(null);
     const [fileName, setFileName] = React.useState('');
     const [isUploading, setIsUploading] = React.useState(false);
-    const { url } = props.store;
 
     const handleChangeFile = (event) => {
         setFileName(event.target.files[0].name);
@@ -62,7 +61,7 @@ const ImageFileUpload = (props) => {
                 }
                 {(fileName && isUploading) && <CircularProgress color="primary"/> }
             </div>
-            <div className="no-img-store" style={{backgroundImage: `url("${url || '/imgs/noimageavailable.svg'}")`}} />
+            <img alt={props.store.name} className="image" src={props.store.url || '/imgs/noimageavailable2.svg'}/>
         </React.Fragment>
     );
 };

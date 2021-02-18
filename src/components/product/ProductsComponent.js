@@ -226,7 +226,7 @@ class ProductsComponent extends React.Component {
                                 }
                                 {(fileName && isUploading) && <CircularProgress color="primary" />}
                             </div>
-                            <div className="no-img-product" style={{ backgroundImage: `url("${product.url || '/imgs/noimageavailable2.svg'}")` }} />
+                            <img alt={product.name} className="image" src={product.url || '/imgs/noimageavailable2.svg'}/>
                         </Paper>
                     </Grid>
                 </Grid>

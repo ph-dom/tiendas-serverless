@@ -1,32 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ShareIcon from '@material-ui/icons/Share';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 
 const ProductListItem = ({ product }) => (
-    <Grid item xs={12} sm={5} md={3}>
+    <Grid item xs={12} sm={6}>
         <Card elevation={4}>
-            <CardHeader
-                avatar={
-                    <Avatar aria-label="recipe" alt={product.store.name} src={product.store.url} />
-                }
-                action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                    </IconButton>
-                }
-                title={product.name}
-                subheader={'$'+product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-            />
             <CardMedia
                 component="img"
                 alt={product.name}
@@ -35,17 +21,26 @@ const ProductListItem = ({ product }) => (
                 title={product.name}
             />
             <CardContent>
+                <Typography variant="h6" color="textPrimary" component="h6">
+                    {product.name}
+                </Typography>
                 <Typography variant="body1" color="textSecondary" component="p">
                     {product.description}
                 </Typography>
                 <Typography variant="body2" color="textPrimary" component="p">
-                    Tienda: {product.store.name}
+                    {'$'+product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
-                <Button size="small" color="secondary" to={`/tienda/${product.store.id}`} component={Link}>
-                    Visitar Tienda
-                </Button>
+                <IconButton aria-label="like">
+                    <ThumbUpIcon />
+                </IconButton>
+                <IconButton aria-label="favorite">
+                    <FavoriteIcon />
+                </IconButton>
+                <IconButton aria-label="share">
+                    <ShareIcon />
+                </IconButton>
             </CardActions>
         </Card>
     </Grid>
