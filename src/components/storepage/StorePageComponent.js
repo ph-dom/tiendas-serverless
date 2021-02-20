@@ -9,14 +9,14 @@ import Typography from '@material-ui/core/Typography';
 const StorePageComponent = (props) => (
     <div className="container">
         <Grid container spacing={2}>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={5} md={4}>
                 <StoreProfile store={props.store} />
             </Grid>
-            <Grid item xs={12} sm={8}>
+            <Grid item xs={12} sm={7} md={8}>
                 <Typography variant="h5">Productos</Typography>
                 <Divider style={{ marginBottom: '10px' }}/>
                 <Grid container spacing={2}>
-                    {props.products.map(product => <ProductListItem  product={product}/>)}
+                    {props.products.map(product => <ProductListItem key={product.id} product={product}/>)}
                 </Grid>
             </Grid>
         </Grid>
