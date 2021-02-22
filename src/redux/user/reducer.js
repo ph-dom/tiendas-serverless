@@ -1,13 +1,13 @@
 let userReducerDefaultState = {
-    uid: null
+    uid: null,
+    fullName: null,
+    email: null
 };
 
 const userReducer = (state = userReducerDefaultState, action) => {
     switch (action.type) {
         case 'LOGIN_USER':
-            return {
-                uid: action.data
-            };
+            return action.data;
         case 'LOGOUT_USER':
             return userReducerDefaultState;
         default:

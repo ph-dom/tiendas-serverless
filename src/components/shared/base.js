@@ -27,7 +27,11 @@ class BaseComponent extends React.Component {
 
     handleAuthStateChange = async (user) => {
         if(user) {
-            this.props.loginUser(user.uid);
+            this.props.loginUser({
+                uid: user.uid,
+                fullName: user.displayName,
+                email: user.email
+            });
             await this.props.startGetCurrentLocation();
             await this.props.startGetNearbyStores();
             await this.props.startGetUserStore();
@@ -68,7 +72,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    loginUser: (uid) => dispatch(loginUser(uid)),
+    loginUser: (userData) => dispatch(loginUser(userData)),
     logoutUser: () => dispatch(logoutUser()),
     openSnackbar: (message) => dispatch(openSnackbar(message)),
     openModal: (message) => dispatch(openModal(message)),

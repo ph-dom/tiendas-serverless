@@ -1,4 +1,4 @@
-import firestore, { auth, storage } from '../../config/firebase';
+import firestore, { storage } from '../../config/firebase';
 import { getStoreProducts, startGetStoreProducts } from '../products/actions';
 const geofire = require('geofire-common');
 
@@ -13,7 +13,7 @@ export const startCreateUserStore = ({ name, address, description }, successCall
         const lat = location.lat;
         const lng = location.lng;
         const hash = geofire.geohashForLocation([location.lat, location.lng]);
-        const user = auth.currentUser;
+        const user = getState().user;
         return firestore.collection('stores').add({
             name,
             address,
@@ -21,10 +21,7 @@ export const startCreateUserStore = ({ name, address, description }, successCall
             lat,
             lng,
             hash,
-            user: {
-                uid: user.uid,
-                email: user.email
-            }
+            user
         })
         .then(documentRef => documentRef.get())
         .then(document => {
@@ -43,8 +40,8 @@ export const startCreateUserStore = ({ name, address, description }, successCall
 };
 
 export const startGetUserStore = (errorCallback) => {
-    return (dispatch) => {
-        const user = auth.currentUser;
+    return (dispatch, getState) => {
+        const user = getState().user;;
         return firestore.collection('stores')
         .where('user.uid', '==', user.uid)
         .get()

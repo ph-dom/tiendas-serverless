@@ -1,8 +1,12 @@
 import { auth } from '../../config/firebase';
 
-export const loginUser = (uid) => ({
+export const loginUser = ({ uid, fullName, email }) => ({
     type: 'LOGIN_USER',
-    data: uid
+    data: {
+        uid,
+        fullName,
+        email
+    }
 });
 
 export const startSigninUserEmail = (fullName, email, password) => {
