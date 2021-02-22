@@ -1,4 +1,5 @@
 import React from 'react';
+import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -63,9 +64,9 @@ class StoreComponent extends React.Component {
                         ))}
                     </Grid>
                 </div>
-                <Fab color="primary" aria-label="add" className="add-product" onClick={() => this.props.history.push('/mitienda/producto')}>
+                {!isEmpty(store) && <Fab color="primary" aria-label="add" className="add-product" onClick={() => this.props.history.push('/mitienda/producto')}>
                     <AddIcon />
-                </Fab>
+                </Fab>}
             </React.Fragment>
         );
     }

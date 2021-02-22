@@ -5,9 +5,13 @@ export const loginUser = (uid) => ({
     data: uid
 });
 
-export const startSigninUserEmail = (email, password) => {
+export const startSigninUserEmail = (fullName, email, password) => {
     return () => {
-        return auth.createUserWithEmailAndPassword(email, password);
+        return auth.createUserWithEmailAndPassword(email, password).then(sign => {
+            return sign.user.updateProfile({
+                displayName: fullName
+            });
+        });
     };
 };
 

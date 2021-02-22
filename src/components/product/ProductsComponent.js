@@ -8,11 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import CloseIcon from '@material-ui/icons/Close';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
-import InputTextOutlined from '../shared/inputs/textoutlined';
-import InputTextareaOutlined from '../shared/inputs/textareaoutlined';
-import InputButtonContained from '../shared/inputs/buttoncontained';
 import ChipFormControl from './chipformcontrol';
 import { startCreateStoreProduct, startUpdateStoreProduct, startUploadStoreProduct } from '../../redux/products/actions';
 import { openSnackbar } from '../../redux/snackbar/actions';
@@ -142,28 +140,33 @@ class ProductsComponent extends React.Component {
                             <Typography variant="h5">{isEmpty(product) ? 'Crear Producto' : name}</Typography>
                             <form id="product-form" onSubmit={this.handleSubmitForm} autoComplete="off" className="tiendas-form tiendas-form__full-width">
                                 <div className="tiendas-form-inputs">
-                                    {isEmpty(product) && <InputTextOutlined
-                                        idInput="ProductInput-name"
-                                        nameInput="name"
-                                        typeInput="text"
-                                        textLabel="Nombre"
+                                    {isEmpty(product) && <TextField
+                                        name="name"
+                                        type="text"
+                                        label="Nombre"
                                         value={name}
                                         onChange={this.onInputTextChange}
+                                        variant="outlined"
+                                        size="small"
                                     />}
-                                    <InputTextOutlined
-                                        idInput="ProductInput-price"
-                                        nameInput="price"
-                                        typeInput="number"
-                                        textLabel="Precio"
+                                    <TextField
+                                        name="price"
+                                        type="number"
+                                        label="Precio"
                                         value={price}
                                         onChange={this.onInputTextChange}
+                                        variant="outlined"
+                                        size="small"
                                     />
-                                    <InputTextareaOutlined
-                                        idInput="ProductInput-description"
-                                        nameInput="description"
-                                        textLabel="Descripción"
+                                    <TextField
+                                        name="description"
+                                        multiline={true}
+                                        label="Descripción"
                                         value={description}
                                         onChange={this.onInputTextChange}
+                                        variant="outlined"
+                                        rows={3}
+                                        size="small"
                                     />
                                     <ChipFormControl
                                         value={tag}
@@ -186,10 +189,9 @@ class ProductsComponent extends React.Component {
                                 <div className="tiendas-form-actions">
                                     {loadingSaveOrUpdate ?
                                         <CircularProgress color="primary" /> :
-                                        <InputButtonContained
-                                            idForm="product-form"
-                                            text="Guardar"
-                                        />
+                                        <Button variant="contained" color="primary" form="product-form" type="submit" size="small">
+                                            Guardar
+                                        </Button>
                                     }
                                 </div>
                             </form>

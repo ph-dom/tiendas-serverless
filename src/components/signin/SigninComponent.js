@@ -1,13 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import InputTextOutlined from '../shared/inputs/textoutlined';
-import InputButtonContained from  '../shared/inputs/buttoncontained';
-import ButtonOutlined from '../shared/buttons/buttonoutlined';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import { startSigninUserEmail } from '../../redux/user/actions';
+import { openModal } from '../../redux/modal/action';
 
 class SigninComponent extends React.Component {
 	state = {
+		fullName: '',
 		email: '',
 		password: '',
 		password2: ''
@@ -23,12 +26,11 @@ class SigninComponent extends React.Component {
 
 	handleSubmitForm = (event) => {
 		event.preventDefault();
-		const { email, password, password2 } = this.state;
+		const { fullName, email, password, password2 } = this.state;
 		if(password === password2) {
-			this.props.startSigninUserEmail(email, password);
+			this.props.startSigninUserEmail(fullName, email, password);
 		} else {
-			window._banner_.setText('Las contraseñas no coinciden.');
-            window._banner_.open();
+			this.props.openModal('Las contraseñas no coinciden.');
 		}
 	}
 
@@ -38,61 +40,76 @@ class SigninComponent extends React.Component {
     }
 
 	render() {
-		const { email, password, password2 } = this.state;
+		const { fullName, email, password, password2 } = this.state;
 		return (
-			<React.Fragment>
-				<Typography variant="h2" className="text-center">
-					Tiendas
-				</Typography>
-				<form id="signin-form" onSubmit={this.handleSubmitForm} autoComplete="off">
-					<div className="tiendas-form">
-						<div className="tiendas-form-inputs">
-							<InputTextOutlined
-								idInput="SigninInput-email"
-								nameInput="email"
-								typeInput="email"
-								textLabel="Email"
-								value={email}
-								onChange={this.onInputTextChange}
-								
-							/>
-							<InputTextOutlined
-								idInput="SigninInput-password"
-								nameInput="password"
-								typeInput="password"
-								textLabel="Contraseña"
-								value={password}
-								onChange={this.onInputTextChange}
-								
-							/>
-							<InputTextOutlined
-								idInput="SigninInput-password2"
-								nameInput="password2"
-								typeInput="password"
-								textLabel="Confirme contraseña"
-								value={password2}
-								onChange={this.onInputTextChange}
-							/>
-						</div>
-						<div className="tiendas-form-actions">
-							<ButtonOutlined
-								text="Iniciar Sesión"
-								onClick={this.handleClickLogin}
-							/>
-							<InputButtonContained
-								idForm="signin-form"
-								text="Registrarse"
-							/>
-						</div>
-					</div>
-				</form>
-			</React.Fragment>
+			<div className="container">
+				<Grid container justify="center">
+					<Grid item xs={12} sm={8} md={6} lg={4}>
+						<Paper elevation={4} className="paper">
+						<Typography variant="h2" className="text-center">
+							Tiendas
+						</Typography>
+						<form id="signin-form" onSubmit={this.handleSubmitForm} autoComplete="off" className="tiendas-form">
+							<div className="tiendas-form-inputs">
+								<TextField
+									name="fullName"
+									type="text"
+									label="Nombre"
+									value={fullName}
+									onChange={this.onInputTextChange}
+									size="small"
+									variant="outlined"
+									placeholder="Nombre Apellido"
+								/>
+								<TextField
+									name="email"
+									type="email"
+									label="Email"
+									value={email}
+									onChange={this.onInputTextChange}
+									size="small"
+									variant="outlined"
+								/>
+								<TextField
+									name="password"
+									type="password"
+									label="Contraseña"
+									value={password}
+									onChange={this.onInputTextChange}
+									size="small"
+									variant="outlined"
+								/>
+								<TextField
+									name="password2"
+									type="password"
+									label="Confirme contraseña"
+									value={password2}
+									onChange={this.onInputTextChange}
+									size="small"
+									variant="outlined"
+								/>
+							</div>
+							<div className="tiendas-form-actions">
+								<Button variant="outlined" color="secondary" onClick={this.handleClickLogin} size="small">
+									Iniciar Sesión
+								</Button>
+								<Button variant="contained" color="primary" form="signin-form" type="submit" size="small">
+									Registrarse
+								</Button>
+							</div>
+						</form>
+						</Paper>
+					</Grid>
+				</Grid>
+				
+			</div>
 		);
 	}
 }
 
 const mapDispatchToProps = (dispatch) => ({
-	startSigninUserEmail: (email, password) => dispatch(startSigninUserEmail(email, password))
+	startSigninUserEmail: (fullName, email, password) => dispatch(startSigninUserEmail(fullName, email, password)),
+	openModal: (message) => dispatch(openModal(message))
 });
 
 export default connect(undefined, mapDispatchToProps)(SigninComponent);

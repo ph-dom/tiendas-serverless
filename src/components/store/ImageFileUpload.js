@@ -1,4 +1,5 @@
 import React from 'react';
+import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
@@ -45,14 +46,14 @@ const ImageFileUpload = (props) => {
                 ref={inputFileRef}
                 onChange={handleChangeFile}
             />
-            <label htmlFor="store-image-file">
+            {!isEmpty(props.store) && <label htmlFor="store-image-file">
                 <IconButton color="primary" aria-label="upload picture" component="span">
                     <PhotoCamera />
                 </IconButton>
                 <Typography variant="body1" component="span">
                     {fileName}
                 </Typography>
-            </label>
+            </label>}
             <div>
                 {(fileName && !isUploading) && 
                     <Button variant="contained" color="primary" onClick={handleUploadImage}>
@@ -61,7 +62,7 @@ const ImageFileUpload = (props) => {
                 }
                 {(fileName && isUploading) && <CircularProgress color="primary"/> }
             </div>
-            <img alt={props.store.name} className="image" src={props.store.url || '/imgs/noimageavailable2.svg'}/>
+            <img alt={props.store.name} className="image" src={props.store.url || '/imgs/noimageavailable.svg'}/>
         </React.Fragment>
     );
 };

@@ -2,10 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { isEmpty, pick } from 'lodash';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import InputTextOutlined from '../shared/inputs/textoutlined';
-import InputTextareaOutlined from '../shared/inputs/textareaoutlined'
-import InputButtonContained from '../shared/inputs/buttoncontained';
 import { openModal } from '../../redux/modal/action';
 import { openSnackbar } from '../../redux/snackbar/actions';
 import { startCreateUserStore, startUpdateUserStore } from '../../redux/store/actions';
@@ -74,37 +73,41 @@ class StoreEditor extends React.Component {
                 <Typography variant="h5">{isEmpty(store) ? 'Crear Tienda' : name}</Typography>
                 <form id="store-form" onSubmit={this.handleSubmitForm} autoComplete="off" className="tiendas-form tiendas-form__full-width">
                     <div className="tiendas-form-inputs">
-                        {isEmpty(store) && <InputTextOutlined
-                            idInput="StoreInput-name"
-                            nameInput="name"
-                            typeInput="text"
-                            textLabel="Nombre"
+                        {isEmpty(store) && <TextField
+                            name="name"
+                            type="text"
+                            label="Nombre"
                             value={name}
                             onChange={this.onInputTextChange}
+                            variant="outlined"
+                            size="small"
                         />}
-                        <InputTextareaOutlined
-                            idInput="StoreInput-description"
-                            nameInput="description"
-                            textLabel="Descripción"
+                        <TextField
+                            name="description"
+                            label="Descripción"
+                            multiline={true}
                             value={description}
                             onChange={this.onInputTextChange}
+                            variant="outlined"
+                            rows="3"
+                            size="small"
                         />
-                        <InputTextOutlined
-                            idInput="StoreInput-address"
-                            nameInput="address"
-                            typeInput="text"
-                            textLabel="Dirección"
+                        <TextField
+                            name="address"
+                            type="text"
+                            label="Dirección"
                             value={address}
                             onChange={this.onInputTextChange}
+                            variant="outlined"
+                            size="small"
                         />
                     </div>
                     <div className="tiendas-form-actions">
                         {loadingSaveOrUpdate ?
                             <CircularProgress color="primary" /> :
-                            <InputButtonContained
-                                idForm="store-form"
-                                text="Guardar"
-                            />
+                            <Button variant="contained" color="primary" form="store-form" type="submit" size="small">
+                                Guardar
+                            </Button>
                         }
                     </div>
                 </form>

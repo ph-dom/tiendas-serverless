@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import InputTextOutlined from '../shared/inputs/textoutlined';
-import InputButtonContained from  '../shared/inputs/buttoncontained';
-import InputButtonOutlined from '../shared/buttons/buttonoutlined';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import { startLoginUser } from '../../redux/user/actions';
 import { openModal } from '../../redux/modal/action';
 
@@ -44,41 +45,47 @@ class LoginComponent extends React.Component {
 	render() {
 		const { email, password } = this.state;
 		return (
-			<React.Fragment>
-				<Typography variant="h2" className="text-center">
-					Tiendas
-				</Typography>
-				<form id="login-form" onSubmit={this.handleSubmitForm} autoComplete="off" className="tiendas-form">
-					<div className="tiendas-form-inputs">
-						<InputTextOutlined
-							idInput="LoginInput-email"
-							nameInput="email"
-							typeInput="email"
-							textLabel="Email"
-							value={email}
-							onChange={this.onInputTextChange}
-						/>
-						<InputTextOutlined
-							idInput="LoginInput-password"
-							nameInput="password"
-							typeInput="password"
-							textLabel="Contraseña"
-							value={password}
-							onChange={this.onInputTextChange}
-						/>
-					</div>
-					<div className="tiendas-form-actions">
-						<InputButtonOutlined
-							onClick={this.handleClickSignin}
-							text="Registrarse"
-						/>
-						<InputButtonContained
-							idForm="login-form"
-							text="Iniciar Sesión"
-						/>
-					</div>
-				</form>
-			</React.Fragment>
+			<div className="container">
+				<Grid container justify="center">
+					<Grid item xs={12} sm={8} md={6} lg={4}>
+						<Paper elevation={4} className="paper">
+							<Typography variant="h2" className="text-center">
+								Tiendas
+							</Typography>
+							<form id="login-form" onSubmit={this.handleSubmitForm} autoComplete="off" className="tiendas-form">
+								<div className="tiendas-form-inputs">
+									<TextField
+										name="email"
+										type="email"
+										label="Email"
+										value={email}
+										onChange={this.onInputTextChange}
+										variant="outlined"
+										size="small"
+									/>
+									<TextField
+										name="password"
+										type="password"
+										label="Contraseña"
+										value={password}
+										onChange={this.onInputTextChange}
+										variant="outlined"
+										size="small"
+									/>
+								</div>
+								<div className="tiendas-form-actions">
+									<Button variant="outlined" color="secondary" onClick={this.handleClickSignin} size="small">
+										Registrarse
+									</Button>
+									<Button variant="contained" color="primary" form="login-form" type="submit" size="small">
+										Iniciar Sesión
+									</Button>
+								</div>
+							</form>
+						</Paper>
+					</Grid>
+				</Grid>
+			</div>
 		);
 	}
 }

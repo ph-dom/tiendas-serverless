@@ -74,7 +74,7 @@ const AppBarComponent = (props) => {
                             open={open}
                             onClose={handleClose}
                         >
-                            <MenuItem onClick={handleClose} component={Link} to="/mitienda" >Mi Tienda</MenuItem>
+                            <MenuItem onClick={handleClose} component={Link} to="/mitienda">Mi Tienda</MenuItem>
                             <Divider />
                             <MenuItem onClick={handleLogout}>Cerrar Sesión</MenuItem>
                         </Menu>

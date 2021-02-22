@@ -9,48 +9,52 @@ import StoreComponent from './store/StoreComponent';
 import ProductsComponent from './product/ProductsComponent';
 import StorePageComponent from './storepage/StorePageComponent';
 
-const AppRouter = ({ isAuthenticated }) => (
+const AppRouter = () => (
     <BrowserRouter>
         <BaseComponent>
             <Switch>
-                <PrivateRoute isAuthenticated={isAuthenticated} path="/" exact component={HomeComponent} />
-                <PrivateRoute isAuthenticated={isAuthenticated} path="/mitienda" exact component={StoreComponent} />
-                <PrivateRoute isAuthenticated={isAuthenticated} path={["/mitienda/producto","/mitienda/producto/:idProduct"]} exact component={ProductsComponent} />
-                <PrivateRoute isAuthenticated={isAuthenticated} path="/tienda/:idStore" component={StorePageComponent}/>
-                <PublicRoute isAuthenticated={isAuthenticated} path="/signin" component={SigninComponent} />
-                <PublicRoute isAuthenticated={isAuthenticated} path="/login" exact component={LoginComponent} />
+                <PrivateRoute path="/" exact component={HomeComponent} />
+                <PrivateRoute path="/mitienda" exact component={StoreComponent} />
+                <PrivateRoute path={["/mitienda/producto","/mitienda/producto/:idProduct"]} exact component={ProductsComponent} />
+                <PrivateRoute path="/tienda/:idStore" component={StorePageComponent}/>
+                <PublicRoute path="/signin" component={SigninComponent} />
+                <PublicRoute path="/login" component={LoginComponent} />
                 <Route path="*" component={() => <h1>Not Found</h1>} />
             </Switch>
         </BaseComponent>
     </BrowserRouter>
 );
 
-const PrivateRoute = ({ isAuthenticated, ...rest }) =>  {
-    if (isAuthenticated) {
-        return (
-            <Route {...rest} />
-        );
-    } else {
-        return (
-            <Route {...rest} component={() => <Redirect to="/login" />} />
-        );
-    }
-}
-
-const PublicRoute = ({ isAuthenticated, ...rest }) => {
-    if (isAuthenticated) {
-        return (
-            <Route {...rest} component={() => <Redirect to="/" />} />
-        );
-    } else {
-        return (
-            <Route {...rest}/>
-        );
-    }
-}
-
 const mapStateToProps = (state) => ({
     isAuthenticated: state.user.uid !== null
 });
 
-export default connect(mapStateToProps)(AppRouter);
+const PrivateRoute = connect(mapStateToProps)(
+    ({ isAuthenticated, ...rest }) =>  {
+        if (isAuthenticated) {
+            return (
+                <Route {...rest} />
+            );
+        } else {
+            return (
+                <Route {...rest} component={() => <Redirect to="/login" />} />
+            );
+        }
+    }
+);
+
+const PublicRoute = connect(mapStateToProps)(
+    ({ isAuthenticated, ...rest }) => {
+        if (isAuthenticated) {
+            return (
+                <Route {...rest} component={() => <Redirect to="/" />} />
+            );
+        } else {
+            return (
+                <Route {...rest}/>
+            );
+        }
+    }
+);
+
+export default AppRouter;

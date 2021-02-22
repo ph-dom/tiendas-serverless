@@ -31,7 +31,6 @@ class BaseComponent extends React.Component {
             await this.props.startGetCurrentLocation();
             await this.props.startGetNearbyStores();
             await this.props.startGetUserStore();
-            this.props.history.push('/');
             this.props.openSnackbar(`Has ingresado como: ${user.email}.`);
         } else {
             this.props.logoutUser();
