@@ -15,7 +15,14 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
-const RequestResume = ({ openRequestResume, handleCloseRequestResume, request, handleRemoveToRequest, handleAddUnit, handleRemoveUnit }) => {
+const RequestResume = ({
+    openRequestResume,
+    handleCloseRequestResume,
+    request,
+    handleRemoveToRequest,
+    handleAddUnit,
+    handleRemoveUnit
+}) => {
     let total = request.reduce(function (acum, item) {
         return acum + (Number(item.product.price) * item.units);
     }, 0);
@@ -44,7 +51,7 @@ const RequestResume = ({ openRequestResume, handleCloseRequestResume, request, h
                                     <IconButton edge="end" aria-label="add" color="primary" onClick={() => handleAddUnit(item.product.id)}>
                                         <AddCircleIcon />
                                     </IconButton>
-                                    <IconButton edge="end" aria-label="remove" color="secondary" onClick={() => handleRemoveUnit(item.product.id)}>
+                                    <IconButton edge="end" aria-label="remove" color="secondary" onClick={item.units === 1 ? () => handleRemoveToRequest(item.product.id) : () => handleRemoveUnit(item.product.id)}>
                                         <RemoveCircleIcon />
                                     </IconButton>
                                     <IconButton edge="end" aria-label="delete" onClick={() => handleRemoveToRequest(item.product.id)}>

@@ -8,8 +8,9 @@ import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 
-const ProductListItem = ({ product, handleAddToRequest, added }) => (
+const ProductListItem = ({ product, handleAddToRequest, handleRemoveToRequest, added }) => (
     <Grid item xs={12} sm={12} md={6}>
         <Card elevation={4}>
             <CardMedia
@@ -34,8 +35,8 @@ const ProductListItem = ({ product, handleAddToRequest, added }) => (
                 <IconButton aria-label="favorite">
                     <FavoriteIcon />
                 </IconButton>
-                <IconButton aria-label="add to request" color={added ? 'secondary' : 'default'} onClick={handleAddToRequest}>
-                    <AddIcon />
+                <IconButton aria-label="add to request" color={added ? 'secondary' : 'default'} onClick={added ? handleRemoveToRequest : handleAddToRequest}>
+                    {added ? <RemoveIcon /> : <AddIcon />}
                 </IconButton>
             </CardActions>
         </Card>

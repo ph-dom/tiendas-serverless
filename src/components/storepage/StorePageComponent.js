@@ -17,25 +17,24 @@ class StorePageComponent extends React.Component {
 
     handleAddToRequest = (product) => {
         this.setState(state => {
-            const existingProduct = state.request.find(item => item.product.id === product.id);
-            if(!existingProduct) {
-                const item = {
-                    product,
-                    units: 1,
-                    total: product.price
-                };
-                state.request.push(item);
-                return {
-                    request: state.request
-                };
-            }
+            const item = {
+                product,
+                units: 1,
+                total: product.price
+            };
+            state.request.push(item);
+            return {
+                request: state.request
+            };
         });
     }
 
     handleRemoveToRequest = (id) => {
         this.setState(state => {
+            let request = state.request.filter(item => item.product.id !== id)
             return {
-                request: state.request.filter(item => item.product.id !== id)
+                request,
+                openRequestResume: request.length !== 0
             };
         });
     }
@@ -103,6 +102,7 @@ class StorePageComponent extends React.Component {
                                         key={product.id}
                                         product={product}
                                         handleAddToRequest={() => this.handleAddToRequest(product)}
+                                        handleRemoveToRequest={() => this.handleRemoveToRequest(product.id)}
                                         added={request.find(item => item.product.id === product.id) !== undefined}
                                     />
                                 );
