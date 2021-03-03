@@ -7,11 +7,10 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import AddIcon from '@material-ui/icons/Add';
 
-const ProductListItem = ({ product }) => (
-    <Grid item xs={12} sm={6}>
+const ProductListItem = ({ product, handleAddToRequest, added }) => (
+    <Grid item xs={12} sm={12} md={6}>
         <Card elevation={4}>
             <CardMedia
                 component="img"
@@ -32,14 +31,11 @@ const ProductListItem = ({ product }) => (
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
-                <IconButton aria-label="like">
-                    <ThumbUpIcon />
-                </IconButton>
                 <IconButton aria-label="favorite">
                     <FavoriteIcon />
                 </IconButton>
-                <IconButton aria-label="share">
-                    <ShareIcon />
+                <IconButton aria-label="add to request" color={added ? 'secondary' : 'default'} onClick={handleAddToRequest}>
+                    <AddIcon />
                 </IconButton>
             </CardActions>
         </Card>

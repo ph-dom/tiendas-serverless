@@ -1,15 +1,18 @@
 .modal {
     display: block;
     margin: 20px auto;
-    width: 330px;
+    width: calc(100vw - 20px) ;
     height: auto;
-}
-
-.modal p {
-    margin-top: 10px;
 }
 
 .modal-action {
     display: flex;
     justify-content: flex-end;
+    margin-top: 5px;
+}
+
+@media (min-width: 600px) {
+    .modal {
+        width: 500px;
+    }
 }

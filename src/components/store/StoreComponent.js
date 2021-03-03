@@ -11,7 +11,6 @@ import StoreEditor from './StoreEditor';
 import { openModal } from '../../redux/modal/action';
 import { openSnackbar } from '../../redux/snackbar/actions';
 import { startDeleteStoreProduct } from '../../redux/products/actions';
-import './StoreStyles.scss';
 
 class StoreComponent extends React.Component {
 
@@ -64,7 +63,7 @@ class StoreComponent extends React.Component {
                         ))}
                     </Grid>
                 </div>
-                {!isEmpty(store) && <Fab color="primary" aria-label="add" className="add-product" onClick={() => this.props.history.push('/mitienda/producto')}>
+                {!isEmpty(store) && <Fab color="primary" aria-label="add" className="fab-button" onClick={() => this.props.history.push('/mitienda/producto')}>
                     <AddIcon />
                 </Fab>}
             </React.Fragment>
