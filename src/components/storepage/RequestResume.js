@@ -27,7 +27,7 @@ const RequestResume = ({ openRequestResume, handleCloseRequestResume, request, h
             aria-labelledby="request-resume"
             aria-describedby="request-resume-detail"
         >
-            <Paper variant="elevation" elevation={8} className="paper modal">
+            <Paper variant="elevation" elevation={8} className="modal">
                 <Typography variant="h5" className="text-center">Detalle de solicitud</Typography>
                 <Divider />
                 <List>
