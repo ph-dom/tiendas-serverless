@@ -15,12 +15,22 @@ class StorePageComponent extends React.Component {
         openRequestResume: false
     }
 
+    resetState = () => {
+        this.setState({
+            request: [],
+            openRequestResume: false
+        });
+    }
+
     handleAddToRequest = (product) => {
         this.setState(state => {
             const item = {
-                product,
+                product: {
+                    ...product,
+                    store: null
+                },
                 units: 1,
-                total: product.price
+                subtotal: product.price
             };
             state.request.push(item);
             return {
@@ -44,9 +54,12 @@ class StorePageComponent extends React.Component {
             return {
                 request: state.request.map(item => {
                     if(item.product.id === id) {
+                        let units = item.units + 1;
+                        let subtotal = Number(item.product.price) * units;
                         return {
                             ...item,
-                            units: item.units + 1
+                            units,
+                            subtotal 
                         };
                     }
                     return item;
@@ -60,9 +73,12 @@ class StorePageComponent extends React.Component {
             return {
                 request: state.request.map(item => {
                     if(item.product.id === id) {
+                        let units = item.units - 1;
+                        let subtotal = Number(item.product.price) * units;
                         return {
                             ...item,
-                            units: item.units - 1
+                            units,
+                            subtotal
                         };
                     }
                     return item;
@@ -118,7 +134,9 @@ class StorePageComponent extends React.Component {
                         handleRemoveToRequest={this.handleRemoveToRequest}
                         handleAddUnit={this.handleAddUnit}
                         handleRemoveUnit={this.handleRemoveUnit}
+                        resetState={this.resetState}
                         request={request}
+                        store={store}
                     />
                 </Grid>
             </div>

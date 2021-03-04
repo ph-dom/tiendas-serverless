@@ -8,6 +8,7 @@ import { startGetUserStore } from '../../redux/store/actions';
 import { openModal } from '../../redux/modal/action';
 import { startGetCurrentLocation } from '../../redux/location/actions';
 import { startGetNearbyStores } from '../../redux/nearbystores/actions';
+import { startGetUserRequests } from '../../redux/userrequests/actions';
 import AppBarComponent from './appbar';
 import SnackbarComponent from './snackbar';
 import LoadingComponent from './loading';
@@ -35,6 +36,7 @@ class BaseComponent extends React.Component {
             await this.props.startGetCurrentLocation();
             await this.props.startGetNearbyStores();
             await this.props.startGetUserStore();
+            await this.props.startGetUserRequests();
             this.props.openSnackbar(`Has ingresado como: ${user.email}.`);
         } else {
             this.props.logoutUser();
@@ -78,7 +80,8 @@ const mapDispatchToProps = (dispatch) => ({
     openModal: (message) => dispatch(openModal(message)),
     startGetUserStore: () => dispatch(startGetUserStore()),
     startGetCurrentLocation: () => dispatch(startGetCurrentLocation()),
-    startGetNearbyStores: () => dispatch(startGetNearbyStores())
+    startGetNearbyStores: () => dispatch(startGetNearbyStores()),
+    startGetUserRequests: () => dispatch(startGetUserRequests())
 });
 
 const BaseComponentWithRouter = withRouter(BaseComponent);

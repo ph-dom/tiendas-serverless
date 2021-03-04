@@ -60,6 +60,10 @@ class StoreEditor extends React.Component {
     onInputTextChange = (event) => {
         let prop = event.target.name;
         let value = event.target.value;
+        if(prop === 'name' && value.length >= 20) {
+            event.preventDefault();
+            return;
+        }
         this.setState({
             [prop]: value
         });

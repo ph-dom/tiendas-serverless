@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Modal from '@material-ui/core/Modal';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -14,19 +15,29 @@ import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+import { startAddUserRequest } from '../../redux/userrequests/actions';
 
 const RequestResume = ({
     openRequestResume,
     handleCloseRequestResume,
     request,
+    store,
     handleRemoveToRequest,
     handleAddUnit,
-    handleRemoveUnit
+    handleRemoveUnit,
+    resetState,
+    startAddUserRequest
 }) => {
     let total = request.reduce(function (acum, item) {
         return acum + (Number(item.product.price) * item.units);
     }, 0);
-    total = '$' + total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    let totalFormatted = '$' + total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    async function saveRequest() {
+        await startAddUserRequest(request, total, store);
+        resetState();
+    }
+
     return (
         <Modal
             open={openRequestResume}
@@ -40,7 +51,7 @@ const RequestResume = ({
                 <List>
                     {request.map(item => {
                         const price = '$' + item.product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                        const subtotal = '$' + item.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        const subtotal = '$' + item.subtotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                         return (
                             <ListItem key={item.product.id}>
                                 <ListItemAvatar>
@@ -64,13 +75,13 @@ const RequestResume = ({
                     <ListItem>
                         <ListItemText primary={<Typography variant="h6">Total</Typography>} />
                         <ListItemSecondaryAction>
-                            <Typography variant="h6">{total}</Typography>
+                            <Typography variant="h6">{totalFormatted}</Typography>
                         </ListItemSecondaryAction>
                     </ListItem>
                 </List>
                 <Divider />
                 <div className="modal-action">
-                    <Button variant="contained" color="primary" size="small">
+                    <Button variant="contained" color="primary" size="small" onClick={saveRequest}>
                         Enviar solicitud
                     </Button>
                 </div>
@@ -79,4 +90,8 @@ const RequestResume = ({
     );
 }
 
-export default RequestResume;
+const mapDispatchToProps = (dispatch) => ({
+    startAddUserRequest: (requestDetail, total, store) => dispatch(startAddUserRequest(requestDetail, total, store))
+});
+
+export default connect(undefined, mapDispatchToProps)(RequestResume);
