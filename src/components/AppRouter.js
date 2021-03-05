@@ -17,7 +17,7 @@ const AppRouter = () => (
                 <PrivateRoute path="/" exact component={HomeComponent} />
                 <PrivateRoute path="/mitienda" exact component={StoreComponent} />
                 <PrivateRoute path={["/mitienda/producto","/mitienda/producto/:idProduct"]} exact component={ProductsComponent} />
-                <PrivateRoute path="/mis-solicitudes" component={RequestComponent}/>
+                <PrivateRoute path="/solicitudes" component={RequestComponent}/>
                 <PrivateRoute path="/tienda/:idStore" component={StorePageComponent}/>
                 <PublicRoute path="/signin" component={SigninComponent} />
                 <PublicRoute path="/login" component={LoginComponent} />

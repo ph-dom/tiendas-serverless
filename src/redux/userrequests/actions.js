@@ -1,6 +1,7 @@
 import firestore, { timestamp } from '../../config/firebase';
 import { openModal } from '../modal/action';
 import { openSnackbar } from '../snackbar/actions';
+import requestStatus from '../../shared/requestStatus';
 
 const addUserRequest = (request) => ({
     type: 'ADD_USER_REQUESTS',
@@ -15,7 +16,7 @@ export const startAddUserRequest = (detail, total, store) => {
             store,
             detail,
             total,
-            status: 'CREADA',
+            status: requestStatus.CREATED,
             creationDate: timestamp.fromDate(new Date())
         })
         .then(documentRef => documentRef.get())
@@ -41,12 +42,11 @@ const setUserRequests = (requests) => ({
 export const startGetUserRequests = () => {
     return (dispatch, getState) => {
         const uid = getState().user.uid;
-        return firestore.collection('requests')
+        const unsubscribe =  firestore.collection('requests')
         .where('user.uid', '==', uid)
-        .get()
-        .then(matchingDocs => {
+        .onSnapshot(querySnapshot => {
             const requests = [];
-            matchingDocs.forEach(snapshot => {
+            querySnapshot.forEach(snapshot => {
                 requests.push({
                     id: snapshot.id,
                     ...snapshot.data()
@@ -54,9 +54,6 @@ export const startGetUserRequests = () => {
             });
             dispatch(setUserRequests(requests));
         })
-        .catch(error => {
-            console.log(error);
-            dispatch(setUserRequests([]));
-        });
+        return unsubscribe;
     };
 };

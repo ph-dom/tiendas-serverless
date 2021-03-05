@@ -16,6 +16,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import { startAddUserRequest } from '../../redux/userrequests/actions';
+import formatNumber from '../../shared/formatNumber';
 
 const RequestResume = ({
     openRequestResume,
@@ -31,7 +32,7 @@ const RequestResume = ({
     let total = request.reduce(function (acum, item) {
         return acum + (Number(item.product.price) * item.units);
     }, 0);
-    let totalFormatted = '$' + total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    let totalFormatted = formatNumber(total);
 
     async function saveRequest() {
         await startAddUserRequest(request, total, store);
@@ -50,8 +51,8 @@ const RequestResume = ({
                 <Divider />
                 <List>
                     {request.map(item => {
-                        const price = '$' + item.product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                        const subtotal = '$' + item.subtotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        const price = formatNumber(item.product.price);
+                        const subtotal = formatNumber(item.subtotal);
                         return (
                             <ListItem key={item.product.id}>
                                 <ListItemAvatar>

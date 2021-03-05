@@ -9,12 +9,16 @@ import { openModal } from '../../redux/modal/action';
 import { startGetCurrentLocation } from '../../redux/location/actions';
 import { startGetNearbyStores } from '../../redux/nearbystores/actions';
 import { startGetUserRequests } from '../../redux/userrequests/actions';
+import { startGetStoreRequests } from '../../redux/storerequests/actions';
 import AppBarComponent from './appbar';
 import SnackbarComponent from './snackbar';
 import LoadingComponent from './loading';
 import ModalComponent from './modal';
 
 class BaseComponent extends React.Component {
+    unsubscribeStoreRequests = () => null;
+    unsubscribeUserRequests = () => null;
+
     constructor(props){
         super(props);
         this.state = {
@@ -36,9 +40,12 @@ class BaseComponent extends React.Component {
             await this.props.startGetCurrentLocation();
             await this.props.startGetNearbyStores();
             await this.props.startGetUserStore();
-            await this.props.startGetUserRequests();
+            this.unsubscribeUserRequests = this.props.startGetUserRequests();
+            this.unsubscribeStoreRequests = this.props.startGetStoreRequests();
             this.props.openSnackbar(`Has ingresado como: ${user.email}.`);
         } else {
+            this.unsubscribeUserRequests();
+            this.unsubscribeStoreRequests();
             this.props.logoutUser();
             this.props.history.push('/login');
             this.props.openSnackbar('Sesión cerrada.');
@@ -80,6 +87,7 @@ const mapDispatchToProps = (dispatch) => ({
     openModal: (message) => dispatch(openModal(message)),
     startGetUserStore: () => dispatch(startGetUserStore()),
     startGetCurrentLocation: () => dispatch(startGetCurrentLocation()),
+    startGetStoreRequests: () => dispatch(startGetStoreRequests()),
     startGetNearbyStores: () => dispatch(startGetNearbyStores()),
     startGetUserRequests: () => dispatch(startGetUserRequests())
 });

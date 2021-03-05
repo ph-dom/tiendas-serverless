@@ -11,6 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import formatNumber from '../../shared/formatNumber';
 
 const ProductListItem = ({ product }) => (
     <Grid item xs={12} sm={5} md={3}>
@@ -25,7 +26,7 @@ const ProductListItem = ({ product }) => (
                     </IconButton>
                 }
                 title={product.name}
-                subheader={'$'+product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                subheader={formatNumber(product.price)}
             />
             <CardMedia
                 component="img"

@@ -13,23 +13,26 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+import formatNumber from '../../shared/formatNumber';
+import requestStatus from '../../shared/requestStatus';
+import { startUpdateRequestStatus } from '../../redux/storerequests/actions';
 
-const RequestItem = ({ request }) => (
+const RequestItem = ({ request, viewer, marked }) => (
     <Accordion elevation={8}>
         <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             id={request.id}
         >
-            <Typography style={{ flexBasis: '33.33%', flexGrow: '2' }} variant="subtitle2">{request.store.name}</Typography>
-            <Typography style={{ flexGrow: '1' }} variant="subtitle2">{'$' + request.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</Typography>
-            <Typography style={{ flexGrow: '1', textAlign: 'end' }} variant="subtitle2">{request.status}</Typography>
+            <Typography style={{ flexBasis: '33.33%', flexGrow: '2' }} color={marked ? 'secondary' : 'textPrimary'} variant="subtitle2">{request.store.name}</Typography>
+            <Typography style={{ flexGrow: '1' }} color={marked ? 'secondary' : 'textPrimary'} variant="subtitle2">{formatNumber(request.total)}</Typography>
+            <Typography style={{ flexGrow: '1', textAlign: 'end' }} color={marked ? 'secondary' : 'textPrimary'} variant="subtitle2">{request.status}</Typography>
         </AccordionSummary>
         <Divider />
         <AccordionDetails>
             <List style={{ width: '100%' }}>
                 {request.detail.map(item => {
-                    const price = '$' + item.product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                    const subtotal = '$' + item.subtotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                    const price = formatNumber(item.product.price);
+                    const subtotal = formatNumber(item.subtotal);
                     return (
                         <ListItem key={item.product.id}>
                             <ListItemAvatar>
@@ -46,10 +49,25 @@ const RequestItem = ({ request }) => (
         </AccordionDetails>
         <Divider />
         <AccordionActions>
-            <Button size="small">Cancel</Button>
-            <Button size="small" color="primary">
-                Save
-            </Button>
+            {(viewer === 'store' && request.status === requestStatus.CREATED) &&
+                <Button
+                    size="small"
+                    color="secondary"
+                    onClick={() => startUpdateRequestStatus(request.id, requestStatus.REJECTED)}
+                >
+                    Rechazar
+                </Button>}
+            {(viewer === 'store' && request.status === requestStatus.CREATED) &&
+                <Button
+                    size="small"
+                    color="primary"
+                    onClick={() => startUpdateRequestStatus(request.id, requestStatus.ACCEPTED)}
+                >
+                    Aceptar
+                </Button> }
+            {(viewer === 'store' && request.status === requestStatus.ACCEPTED) &&
+                <Typography variant="subtitle2">Enviar mensaje</Typography>}
+            {viewer === 'user' && <Typography variant="subtitle2">Esperando respuesta</Typography>}
         </AccordionActions>
     </Accordion>
 );

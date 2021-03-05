@@ -9,6 +9,7 @@ import nearbyStoresReducer from './nearbystores/reducer';
 import locationReducer from './location/reducer';
 import nearbyProductsReducer from './nearbyproducts/reducer';
 import userRequestsReducer from './userrequests/reducer';
+import storeRequestsReducer from './storerequests/reducer';
 
 const store = createStore(
     combineReducers({
@@ -20,7 +21,8 @@ const store = createStore(
         nearbyStores: nearbyStoresReducer,
         nearbyProducts: nearbyProductsReducer,
         location: locationReducer,
-        userRequests: userRequestsReducer
+        userRequests: userRequestsReducer,
+        storeRequests: storeRequestsReducer
     }),
     compose(applyMiddleware(thunk))
 );

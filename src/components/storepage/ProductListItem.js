@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
+import formatNumber from '../../shared/formatNumber';
 
 const ProductListItem = ({ product, handleAddToRequest, handleRemoveToRequest, added }) => (
     <Grid item xs={12} sm={12} md={6}>
@@ -28,7 +29,7 @@ const ProductListItem = ({ product, handleAddToRequest, handleRemoveToRequest, a
                     {product.description}
                 </Typography>
                 <Typography variant="body2" color="textPrimary" component="p">
-                    {'$'+product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                    {formatNumber(product.price)}
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
