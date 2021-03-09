@@ -144,7 +144,7 @@ class StorePageComponent extends React.Component {
     }
 }
 
-const mapDispatchStateToProps = (state, props) => {
+const mapStateToProps = (state, props) => {
     let idStore = props.match.params.idStore;
     return {
         store: state.nearbyStores.find(store => store.id === idStore),
@@ -152,4 +152,4 @@ const mapDispatchStateToProps = (state, props) => {
     };
 };
 
-export default connect(mapDispatchStateToProps)(StorePageComponent);
+export default connect(mapStateToProps)(StorePageComponent);

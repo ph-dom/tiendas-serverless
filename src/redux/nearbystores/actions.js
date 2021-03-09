@@ -1,4 +1,4 @@
-import firestore from '../../config/firebase';
+import firestore, { fieldvalue } from '../../config/firebase';
 import { isEmpty } from 'lodash';
 import { setNearbyProducts } from '../nearbyproducts/actions';
 const geofire = require('geofire-common');
@@ -83,4 +83,46 @@ const getStoreProduct = async (store) => {
         })
     })
     return products;
+};
+
+const likeNearbyStore = (idStore, uid) => ({
+    type: 'LIKE_NEARBY_STORE',
+    data: {
+        idStore,
+        uid
+    }
+});
+
+export const startLikeStore = (idStore) => {
+    return (dispatch, getState) => {
+        const uid = getState().user.uid;
+        return firestore.collection('stores').doc(idStore).update({
+            likes: fieldvalue.arrayUnion(uid)
+        }).then(() => {
+            dispatch(likeNearbyStore(idStore, uid));
+        }).catch(error => {
+            console.log(error);
+        })
+    };
+};
+
+const dislikeNearbyStore = (idStore, uid) => ({
+    type: 'DISLIKE_NEARBY_STORE',
+    data: {
+        idStore,
+        uid
+    }
+});
+
+export const startDislikeStore = (idStore) => {
+    return (dispatch, getState) => {
+        const uid = getState().user.uid;
+        return firestore.collection('stores').doc(idStore).update({
+            likes: fieldvalue.arrayRemove(uid)
+        }).then(() => {
+            dispatch(dislikeNearbyStore(idStore, uid));
+        }).catch(error => {
+            console.log(error);
+        })
+    };
 };
