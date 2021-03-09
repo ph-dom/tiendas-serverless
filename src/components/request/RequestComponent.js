@@ -4,55 +4,89 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import NativeSelect from '@material-ui/core/NativeSelect';
+import Divider from '@material-ui/core/Divider';
 import RequestItem from './RequestItem';
 import requestStatus from '../../shared/requestStatus';
 
-const RequestComponent = (props) => {
-    console.log(props.status)
-    const [status, changeStatus] = React.useState(props.status | requestStatus.CREATED);
-    React.useEffect(() => {
-        if(props.status !== status) {
-            changeStatus(props.status);
+class RequestComponent extends React.Component {
+    state = {
+        status: this.props.status ? this.props.status : requestStatus.CREATED,
+        id: this.props.id ? this.props.id : null,
+        list: this.props.list ? this.props.list : 'user'
+    };
+
+    componentDidUpdate(prevProps) {
+        console.log(prevProps.status !== this.props.status, prevProps.status, this.props.status);
+        if (prevProps.status !== this.props.status) {
+            this.setState({
+                status: this.props.status
+            });
         }
-    }, [ props.status ]);
-    return (
-        <div className="container">
-            <Grid container spacing={2} justify="center">
-                <Grid item xs={12} sm={8} md={6} xl={6}>
-                    <Typography variant="h4">{props.list === 'user' ? 'Mis Solicitudes' : 'Solicitudes de tienda'}</Typography>
-                    <FormControl>
-                        <NativeSelect
-                            value={status}
-                            onChange={event => changeStatus(event.target.value)}
-                            inputProps={{
-                                name: 'list',
-                                id: 'status-list',
-                            }}
-                        >
-                            <option value={requestStatus.CREATED}>{requestStatus.CREATED}</option>
-                            <option value={requestStatus.REJECTED}>{requestStatus.REJECTED}</option>
-                            <option value={requestStatus.ACCEPTED}>{requestStatus.ACCEPTED}</option>
-                        </NativeSelect>
-                    </FormControl>
-                    {props.list === 'user' && 
-                        props.userRequests.filter(req => req.status === status).map(req => {
-                            console.log(props.id === req.id, props.id, req.id);
-                            return (
-                                <RequestItem key={req.id} request={req} viewer={props.list} marked={props.id === req.id} />
-                            );
-                        })}
-                    {props.list === 'store' && 
-                        props.storeRequests.filter(req => req.status === status).map(req => {
-                            console.log(props.id === req.id, props.id, req.id);
-                            return (
-                                <RequestItem key={req.id} request={req} viewer={props.list} marked={props.id === req.id}/>
-                            );
-                        })}
+        if(prevProps.id !== this.props.id) {
+            this.setState({
+                id: this.props.id
+            });
+        }
+        if(prevProps.list !== this.props.list) {
+            this.setState({
+                list: this.props.list
+            });
+        }
+    }
+
+    render() {
+        const { list, status, id } = this.state;
+        const { storeRequests, userRequests } = this.props;
+        return (
+            <div className="container">
+                <Grid container spacing={2} justify="center">
+                    <Grid item xs={12} sm={8} md={6} xl={6}>
+                        <Typography variant="h4">{list === 'user' ? 'Mis Solicitudes' : 'Solicitudes de tienda'}</Typography>
+                        <FormControl>
+                            <NativeSelect
+                                value={status}
+                                onChange={event => this.setState({ status: event.target.value })}
+                                inputProps={{
+                                    name: 'list',
+                                    id: 'status-list',
+                                }}
+                            >
+                                {Object.keys(requestStatus).map(key => {
+                                    return (
+                                        <option value={requestStatus[key]}>{requestStatus[key]}</option>
+                                    );
+                                })}
+                            </NativeSelect>
+                        </FormControl>
+                        <Divider style={{marginTop:'10px', marginBottom:'10px'}}/>
+                        {list === 'user' &&
+                            userRequests.filter(req => req.status === status).map(req => {
+                                return (
+                                    <RequestItem
+                                        key={req.id}
+                                        request={req}
+                                        viewer={list}
+                                        marked={id === req.id}
+                                    />
+                                );
+                            })}
+                        {list === 'store' &&
+                            storeRequests.filter(req => req.status === status).map(req => {
+                                return (
+                                    <RequestItem
+                                        key={req.id}
+                                        request={req}
+                                        viewer={list}
+                                        marked={id === req.id}
+                                    />
+                                );
+                            })}
+                    </Grid>
                 </Grid>
-            </Grid>
-        </div>
-    );
-};
+            </div>
+        );
+    }
+}
 
 const mapStateToProps = (state, props) => {
     let urlParams = new URLSearchParams(props.location.search);

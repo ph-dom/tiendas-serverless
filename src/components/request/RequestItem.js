@@ -12,7 +12,9 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
+import ChatIcon from '@material-ui/icons/Chat';
 import formatNumber from '../../shared/formatNumber';
 import requestStatus from '../../shared/requestStatus';
 import { startUpdateRequestStatus } from '../../redux/storerequests/actions';
@@ -48,11 +50,15 @@ const RequestItem = ({ request, viewer, marked }) => (
             </List>
         </AccordionDetails>
         <Divider />
-        <AccordionActions>
+        {<AccordionActions>
+            <IconButton size="small" color="secondary">
+                <ChatIcon />
+            </IconButton>
             {(viewer === 'store' && request.status === requestStatus.CREATED) &&
                 <Button
                     size="small"
                     color="secondary"
+                    variant="outlined"
                     onClick={() => startUpdateRequestStatus(request.id, requestStatus.REJECTED)}
                 >
                     Rechazar
@@ -61,14 +67,21 @@ const RequestItem = ({ request, viewer, marked }) => (
                 <Button
                     size="small"
                     color="primary"
+                    variant="outlined"
                     onClick={() => startUpdateRequestStatus(request.id, requestStatus.ACCEPTED)}
                 >
                     Aceptar
                 </Button> }
-            {(viewer === 'store' && request.status === requestStatus.ACCEPTED) &&
-                <Typography variant="subtitle2">Enviar mensaje</Typography>}
-            {viewer === 'user' && <Typography variant="subtitle2">Esperando respuesta</Typography>}
-        </AccordionActions>
+            {(viewer === 'user' && request.status === requestStatus.ACCEPTED) &&
+                <Button
+                    size="small"
+                    color="primary"
+                    variant="outlined"
+                    onClick={() => startUpdateRequestStatus(request.id, requestStatus.RECEIVED)}
+                >
+                    Recibido
+                </Button>}
+        </AccordionActions>}
     </Accordion>
 );
 

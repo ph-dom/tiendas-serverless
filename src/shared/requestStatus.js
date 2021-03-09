@@ -1,7 +1,8 @@
 const requestStatus = {
     CREATED: 'CREADA',
     REJECTED: 'RECHAZADA',
-    ACCEPTED: 'ACEPTADA'
+    ACCEPTED: 'ACEPTADA',
+    RECEIVED: 'RECIBIDA'
 }
 
 export default requestStatus;
