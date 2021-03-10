@@ -15,6 +15,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import ChatIcon from '@material-ui/icons/Chat';
+import moment from '../../config/moment';
 import formatNumber from '../../shared/formatNumber';
 import requestStatus from '../../shared/requestStatus';
 import { startUpdateRequestStatus } from '../../redux/storerequests/actions';
@@ -27,10 +28,10 @@ const RequestItem = ({ request, viewer, marked }) => (
         >
             <Typography style={{ flexBasis: '33.33%', flexGrow: '2' }} color={marked ? 'secondary' : 'textPrimary'} variant="subtitle2">{request.store.name}</Typography>
             <Typography style={{ flexGrow: '1' }} color={marked ? 'secondary' : 'textPrimary'} variant="subtitle2">{formatNumber(request.total)}</Typography>
-            <Typography style={{ flexGrow: '1', textAlign: 'end' }} color={marked ? 'secondary' : 'textPrimary'} variant="subtitle2">{request.status}</Typography>
+            <Typography style={{ flexGrow: '1', textAlign: 'end' }} color={marked ? 'secondary' : 'textPrimary'} variant="subtitle2">{moment(request.creationDate.toDate()).format("DD/MM/YYYY, HH:mm")}</Typography>
         </AccordionSummary>
         <Divider />
-        <AccordionDetails>
+        <AccordionDetails style={{ flexDirection: 'column' }}>
             <List style={{ width: '100%' }}>
                 {request.detail.map(item => {
                     const price = formatNumber(item.product.price);
@@ -80,6 +81,15 @@ const RequestItem = ({ request, viewer, marked }) => (
                     onClick={() => startUpdateRequestStatus(request.id, requestStatus.RECEIVED)}
                 >
                     Recibido
+                </Button>}
+            {(viewer === 'user' && request.status === requestStatus.REJECTED) &&
+                <Button
+                    size="small"
+                    color="primary"
+                    variant="outlined"
+                    onClick={() => startUpdateRequestStatus(request.id, requestStatus.DISCARDED)}
+                >
+                    Descartar
                 </Button>}
         </AccordionActions>}
     </Accordion>

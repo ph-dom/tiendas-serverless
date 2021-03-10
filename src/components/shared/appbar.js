@@ -117,6 +117,7 @@ const AppBarComponent = (props) => {
                             open={open}
                             onClose={handleClose}
                         >
+                            <MenuItem onClick={handleClose} component={Link} to="/">Inicio</MenuItem>
                             <MenuItem onClick={handleClose} component={Link} to="/solicitudes?list=user">Mis Solicitudes</MenuItem>
                             <MenuItem onClick={handleClose} component={Link} to="/mitienda">Mi Tienda</MenuItem>
                             <MenuItem onClick={handleClose} component={Link} to="/solicitudes?list=store">Solicitudes</MenuItem>

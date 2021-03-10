@@ -3,11 +3,6 @@ import { openModal } from '../modal/action';
 import { openSnackbar } from '../snackbar/actions';
 import requestStatus from '../../shared/requestStatus';
 
-const addUserRequest = (request) => ({
-    type: 'ADD_USER_REQUESTS',
-    data: request
-});
-
 export const startAddUserRequest = (detail, total, store) => {
     return (dispatch, getState) => {
         const user = getState().user;
@@ -20,11 +15,7 @@ export const startAddUserRequest = (detail, total, store) => {
             creationDate: timestamp.fromDate(new Date())
         })
         .then(documentRef => documentRef.get())
-        .then(document => {
-            dispatch(addUserRequest({
-                id: document.id,
-                ...document.data()
-            }));
+        .then(() => {
             dispatch(openSnackbar('Solicitud enviada.'));
         })
         .catch(error => {

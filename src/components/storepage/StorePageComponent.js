@@ -102,6 +102,7 @@ class StorePageComponent extends React.Component {
     render() {
         const { request, openRequestResume } = this.state;
         const { store, products } = this.props;
+        console.log(products)
         return (
             <div className="container">
                 <Grid container spacing={2}>
